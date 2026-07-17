@@ -4,6 +4,16 @@
 
 ### Changes
 
+* #755 Readded camera-based steering to the ball. You can now configure per interaction type if the player can control the pitch and spin of the ball by moving their camera after shooting it.
+* #755 The default soccer_ball settings have been changed to be similar to the old ball. This includes camera-based steering and less bounciness. You may delete the plugins/BlockBall/ball folder to access the new balls.
+* #755 Changed the [ball wiki page](https://shynixn.github.io/BlockBall/wiki/site/ball/) to reflect the new changes.
+
+---
+
+## Release 7.42.0
+
+### Changes
+
 * #753 Added new logging settings to the config.yml. It is highly recommended to delete the config.yml to let it be recreated.
 * #753 You can now configure the log level of BlockBall for the main server console and BlockBall-only log file found in the /plugins/BlockBall/logs folder.
 * #753 Log levels can be switched without server shutdown and applied via the /blockball reload command. This is useful for cases where you want to actively investigate something using DEBUG mode.

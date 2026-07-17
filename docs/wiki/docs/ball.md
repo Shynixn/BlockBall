@@ -1,6 +1,6 @@
 # Customizing the Ball
 
-BlockBall separates ball behavior from arena configuration. Every ball is defined in its own YAML file inside the `/plugins/BlockBall/ball/` directory. Each file describes the visual appearance, the physics simulation, and exactly how players interact with the ball. You can create as many ball types as you like and switch between them per arena.
+Each ball is defined in its own YAML file inside `/plugins/BlockBall/ball/`. Files cover appearance, physics, and player interactions. You can create as many ball types as you like and switch between them per arena.
 
 ---
 
@@ -60,8 +60,8 @@ render:
   modelScale: 1.0
   visualItem:
     typeName: PLAYER_HEAD,397
-    amount: '1'
-    durability: '3'
+    amount: "1"
+    durability: "3"
     displayName: null
     skinBase64: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHBzOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzhlNGE3MGI3YmJjZDdhOGMzMjJkNTIyNTIwNDkxYTI3ZWE2YjgzZDYwZWNmOTYxZDJiNGVmYmJmOWY2MDVkIn19fQ==
     lore: null
@@ -101,12 +101,12 @@ physics:
   interactionBoundsSize: 1.5
   collisionBoundsSize: 1.0
   verticalOffset: -0.3
-  bounciness: 0.7
+  bounciness: 0.4
   mass: 1.0
   restVelocityThreshold: 0.01
-  gravityModifier: 0.07
-  airDrag: 0.001
-  rollingFriction: 0.1
+  gravityModifier: 0.06
+  airDrag: 0.002
+  rollingFriction: 0.04
   spinDrag: 0.05
   curveMultiplier: 0.05
   globalInteractionCooldownTicks: 20
@@ -132,6 +132,10 @@ Each rule has:
 | `horizontalImpulse` | Horizontal force applied to the ball in the player's facing direction. |
 | `verticalImpulse` | Vertical (upward) force applied to the ball. |
 | `spinImpulse` | Initial rotational spin around the Y-axis. Negative = left curve (slice), positive = right curve (hook). |
+| `postImpulseTicks` | Ticks to wait before sampling the player's pitch/yaw for mid-flight steering. `0` disables it. |
+| `postPitchInfluence` | How much camera pitch adds vertical force after `postImpulseTicks`. `0.0` = no steering, `1.0` = full impulse as vertical force. |
+| `postPitchClampAngle` | Max pitch angle for steering. Minecraft: `-90°` = straight up, `+90°` = straight down. `0.0` disables downward steering; `90.0` allows it. |
+| `postYawSpinScale` | How much horizontal mouse movement (yaw change) adds spin mid-flight. A 90° flick with scale `0.5` adds ~0.25 spin. Range: `0.1`–`1.0`. |
 | `effectName` | Name of a particle/sound effect to play on trigger. Leave empty for no effect. |
 
 #### Available Trigger Types
@@ -146,23 +150,27 @@ Each rule has:
 
 ## Built-In Ball Examples
 
-BlockBall ships with three pre-configured ball files that demonstrate different gameplay styles. They are all found in `/plugins/BlockBall/ball/`.
+Three pre-configured ball files are included in `/plugins/BlockBall/ball/`.
 
 ---
 
 ### `soccer_ball.yml` — Default Soccer Ball
 
-This is the standard ball used by all arenas unless you specify otherwise. It offers straightforward controls: walk into the ball to dribble it forward, left-click to kick it, and sprint-click for a powerful shot.
+The default ball used by all arenas unless specified otherwise. Walk into the ball to dribble, left-click to kick with camera-based steering.
 
 #### How to Play
 
 | Action | Input | Effect |
 |--------|-------|--------|
 | Dribble / Touch | Walk into ball (`COLLIDE`) | Nudges the ball forward at low height |
-| Standard kick | `LEFT_CLICK` | Kicks the ball forward at a medium arc |
-| Power shot | `SPRINT` + `LEFT_CLICK` | Blasts the ball with maximum height and force |
+| Standard kick | `LEFT_CLICK` | Kicks the ball forward at a medium-low arc |
+| Powered kick | `SPRINT` + `LEFT_CLICK` | Kicks the ball forward at a medium arc with extra oomph |
 
-All interactions work regardless of which hotbar slot is selected (slots 0–8).
+All interactions work across all hotbar slots (0–8).
+
+**Mid-Flight Camera Steering**
+
+Both kicks sample your camera 7 ticks after firing. Looking up adds lift (`postPitchInfluence`), swiping sideways adds curve spin (`postYawSpinScale`).
 
 #### Configuration
 
@@ -172,9 +180,13 @@ render:
   modelScale: 1.0
   visualItem:
     typeName: PLAYER_HEAD,397
-    amount: '1'
-    durability: '3'
+    amount: "1"
+    durability: "3"
+    displayName: null
     skinBase64: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHBzOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzhlNGE3MGI3YmJjZDdhOGMzMjJkNTIyNTIwNDkxYTI3ZWE2YjgzZDYwZWNmOTYxZDJiNGVmYmJmOWY2MDVkIn19fQ==
+    lore: null
+    nbt: null
+    component: null
   rotationEnabled: true
   visualVerticalOffset: -1.0
   renderDistance: 60
@@ -183,12 +195,12 @@ physics:
   interactionBoundsSize: 1.5
   collisionBoundsSize: 1.0
   verticalOffset: -0.3
-  bounciness: 0.7
+  bounciness: 0.4
   mass: 1.0
   restVelocityThreshold: 0.01
-  gravityModifier: 0.07
-  airDrag: 0.001
-  rollingFriction: 0.1
+  gravityModifier: 0.06
+  airDrag: 0.002
+  rollingFriction: 0.04
   spinDrag: 0.05
   curveMultiplier: 0.05
   globalInteractionCooldownTicks: 20
@@ -200,27 +212,39 @@ interactions:
   conditionHotBarRangeEnd: 8
   conditionGrabbedBySelf: false
   executionType: SHOOT
-  horizontalImpulse: 1.0
+  horizontalImpulse: 0.6
   verticalImpulse: 0.2
   spinImpulse: 0.0
-  effectName: ''
+  postImpulseTicks: 0
+  postPitchInfluence: 0.0
+  postPitchClampAngle: 0.0
+  postYawSpinScale: 0.0
+  effectName: ""
 - triggerType: LEFT_CLICK
   conditionHotBarRangeStart: 0
   conditionHotBarRangeEnd: 8
   conditionGrabbedBySelf: false
   executionType: SHOOT
-  horizontalImpulse: 1.0
-  verticalImpulse: 0.6
+  horizontalImpulse: 0.9
+  verticalImpulse: 0.5
   spinImpulse: 0.0
+  postImpulseTicks: 7
+  postPitchInfluence: 0.5
+  postPitchClampAngle: 0.0
+  postYawSpinScale: 1.0
   effectName: ball_kick
 - triggerType: SPRINT_LEFT_CLICK
   conditionHotBarRangeStart: 0
   conditionHotBarRangeEnd: 8
   conditionGrabbedBySelf: false
   executionType: SHOOT
-  horizontalImpulse: 1.0
-  verticalImpulse: 1.0
+  horizontalImpulse: 0.9
+  verticalImpulse: 0.6
   spinImpulse: 0.0
+  postImpulseTicks: 7
+  postPitchInfluence: 0.5
+  postPitchClampAngle: 0.0
+  postYawSpinScale: 1.0
   effectName: ball_kick
 ```
 
@@ -234,17 +258,19 @@ ballName: soccer_ball
 
 ### `curve_soccer_ball.yml` — Curve Soccer Ball
 
-An advanced soccer ball that uses the hotbar slot to determine the direction of spin applied to the ball. Players who position the selected slot to the left, center, or right of their hotbar can curve the ball in different directions. Sprinting adds extra height and speed, and crouching while clicking lets you play a short backpass.
+Combines camera-based steering (standing) with hotbar-based spin control (sprinting). **Standing**: `LEFT_CLICK` uses camera pitch/yaw for lift and curve. **Sprinting**: `SPRINT` + `LEFT_CLICK` uses the active hotbar slot for spin direction. `SNEAK` + `LEFT_CLICK` plays a short backpass.
 
 #### How to Play
 
-The **active hotbar slot** controls the curve direction:
+**Standing kick** — `LEFT_CLICK` samples your camera 7 ticks after firing. Looking up adds lift, swiping sideways adds spin.
 
-| Hotbar Slots | Kick (`LEFT_CLICK`) | Power Shot (`SPRINT_LEFT_CLICK`) |
-|---|---|---|
-| Slots 1–3 (left) | Left-curving kick | Left-curving power shot |
-| Slots 4–6 (center) | Straight kick | Straight power shot |
-| Slots 7–9 (right) | Right-curving kick | Right-curving power shot |
+**Power shot** — `SPRINT` + `LEFT_CLICK` uses the active hotbar slot for spin direction:
+
+| Hotbar Slots | Power Shot (`SPRINT_LEFT_CLICK`) |
+|---|---|
+| Slots 1–3 (left) | Left-curving power shot |
+| Slots 4–6 (center) | Straight power shot |
+| Slots 7–9 (right) | Right-curving power shot |
 
 !!! note "Hotbar Slots"
     The hotbar slot index is 0-based in configuration (`0` = slot 1, `8` = slot 9).
@@ -252,11 +278,11 @@ The **active hotbar slot** controls the curve direction:
 | Action | Input | Effect |
 |--------|-------|--------|
 | Dribble / Touch | Walk into ball (`COLLIDE`) | Short forward touch with no spin (all slots) |
-| Kick | `LEFT_CLICK` | Curved or straight kick depending on hotbar |
-| Power shot | `SPRINT` + `LEFT_CLICK` | High-arc curved or straight power shot |
+| Standing kick | `LEFT_CLICK` (not sprinting) | Medium-arc kick with camera-based pitch/yaw steering |
+| Power shot | `SPRINT` + `LEFT_CLICK` | High-arc curved or straight power shot based on hotbar slot |
 | Backpass / Cushion | `SNEAK` + `LEFT_CLICK` | Short low reverse touch (h: -0.6) — all slots |
 
-The `curveMultiplier` in the physics section determines how dramatically the spin bends the flight path. The default is `0.05`; raise it to create sharper curves.
+`curveMultiplier` determines how much spin bends the flight path. Default is `0.05`; raise it for sharper curves.
 
 #### Configuration
 
@@ -266,9 +292,13 @@ render:
   modelScale: 1.0
   visualItem:
     typeName: PLAYER_HEAD,397
-    amount: '1'
-    durability: '3'
+    amount: "1"
+    durability: "3"
+    displayName: null
     skinBase64: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHBzOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzhlNGE3MGI3YmJjZDdhOGMzMjJkNTIyNTIwNDkxYTI3ZWE2YjgzZDYwZWNmOTYxZDJiNGVmYmJmOWY2MDVkIn19fQ==
+    lore: null
+    nbt: null
+    component: null
   rotationEnabled: true
   visualVerticalOffset: -1.0
   renderDistance: 60
@@ -277,12 +307,12 @@ physics:
   interactionBoundsSize: 1.5
   collisionBoundsSize: 1.0
   verticalOffset: -0.3
-  bounciness: 0.7
+  bounciness: 0.4
   mass: 1.0
   restVelocityThreshold: 0.01
-  gravityModifier: 0.07
-  airDrag: 0.001
-  rollingFriction: 0.1
+  gravityModifier: 0.06
+  airDrag: 0.002
+  rollingFriction: 0.04
   spinDrag: 0.05
   curveMultiplier: 0.05
   globalInteractionCooldownTicks: 20
@@ -295,39 +325,27 @@ interactions:
   conditionHotBarRangeEnd: 8
   conditionGrabbedBySelf: false
   executionType: SHOOT
-  horizontalImpulse: 1.0
+  horizontalImpulse: 0.6
   verticalImpulse: 0.2
   spinImpulse: 0.0
-  effectName: ''
-  # Kick — left slots → left spin
+  postImpulseTicks: 0
+  postPitchInfluence: 0.0
+  postPitchClampAngle: 0.0
+  postYawSpinScale: 0.0
+  effectName: ""
+  # Standing kick — camera-based pitch/yaw steering (all slots)
 - triggerType: LEFT_CLICK
   conditionHotBarRangeStart: 0
-  conditionHotBarRangeEnd: 2
-  conditionGrabbedBySelf: false
-  executionType: SHOOT
-  horizontalImpulse: 1.0
-  verticalImpulse: 0.6
-  spinImpulse: -2.0
-  effectName: ball_kick
-  # Kick — center slots → no spin
-- triggerType: LEFT_CLICK
-  conditionHotBarRangeStart: 3
-  conditionHotBarRangeEnd: 5
-  conditionGrabbedBySelf: false
-  executionType: SHOOT
-  horizontalImpulse: 1.0
-  verticalImpulse: 0.6
-  spinImpulse: 0.0
-  effectName: ball_kick
-  # Kick — right slots → right spin
-- triggerType: LEFT_CLICK
-  conditionHotBarRangeStart: 6
   conditionHotBarRangeEnd: 8
   conditionGrabbedBySelf: false
   executionType: SHOOT
-  horizontalImpulse: 1.0
+  horizontalImpulse: 0.9
   verticalImpulse: 0.6
-  spinImpulse: 2.0
+  spinImpulse: 0.0
+  postImpulseTicks: 7
+  postPitchInfluence: 0.5
+  postPitchClampAngle: 0.0
+  postYawSpinScale: 1.0
   effectName: ball_kick
   # Power shot — left slots → left spin
 - triggerType: SPRINT_LEFT_CLICK
@@ -336,8 +354,12 @@ interactions:
   conditionGrabbedBySelf: false
   executionType: SHOOT
   horizontalImpulse: 1.0
-  verticalImpulse: 1.0
+  verticalImpulse: 0.7
   spinImpulse: -2.0
+  postImpulseTicks: 0
+  postPitchInfluence: 0.0
+  postPitchClampAngle: 0.0
+  postYawSpinScale: 0.0
   effectName: ball_kick
   # Power shot — center slots → no spin
 - triggerType: SPRINT_LEFT_CLICK
@@ -346,8 +368,12 @@ interactions:
   conditionGrabbedBySelf: false
   executionType: SHOOT
   horizontalImpulse: 1.0
-  verticalImpulse: 1.0
+  verticalImpulse: 0.7
   spinImpulse: 0.0
+  postImpulseTicks: 0
+  postPitchInfluence: 0.0
+  postPitchClampAngle: 0.0
+  postYawSpinScale: 0.0
   effectName: ball_kick
   # Power shot — right slots → right spin
 - triggerType: SPRINT_LEFT_CLICK
@@ -356,8 +382,12 @@ interactions:
   conditionGrabbedBySelf: false
   executionType: SHOOT
   horizontalImpulse: 1.0
-  verticalImpulse: 1.0
+  verticalImpulse: 0.7
   spinImpulse: 2.0
+  postImpulseTicks: 0
+  postPitchInfluence: 0.0
+  postPitchClampAngle: 0.0
+  postYawSpinScale: 0.0
   effectName: ball_kick
   # Sneak click — short backpass, all slots
 - triggerType: SNEAK_LEFT_CLICK
@@ -368,6 +398,10 @@ interactions:
   horizontalImpulse: -0.6
   verticalImpulse: 0.2
   spinImpulse: 0.0
+  postImpulseTicks: 0
+  postPitchInfluence: 0.0
+  postPitchClampAngle: 0.0
+  postYawSpinScale: 0.0
   effectName: ball_kick
 ```
 
@@ -381,17 +415,13 @@ ballName: curve_soccer_ball
 
 ### `hand_ball.yml` — Handball
 
-A handball-inspired configuration that introduces a **grab mechanic**. Players can pick up the ball and carry it, then throw it with spin control based on their active hotbar slot — much like a handball game. Without the ball in hand, clicking simply bumps the ball forward gently.
+Introduces a **grab mechanic** — pick up the ball and throw it with hotbar-controlled spin. Without the ball, clicking bumps it forward gently.
 
 #### How to Play
 
-**Step 1 — Pick up the ball**
+**Pick up** — select **hotbar slot 6–9** and left-click the ball to trigger `GRAB`.
 
-When you are near the ball and do not have it, select **hotbar slot 6–9** and left-click the ball. This triggers a `GRAB` action and the ball attaches to you.
-
-**Step 2 — Throw the ball**
-
-Once you are holding the ball, use `LEFT_CLICK` to throw it. The active hotbar slot controls the throw direction:
+**Throw** — while holding the ball, `LEFT_CLICK` throws it. The active hotbar slot controls the direction:
 
 | Hotbar Slots | Throw Direction |
 |---|---|
@@ -399,25 +429,21 @@ Once you are holding the ball, use `LEFT_CLICK` to throw it. The active hotbar s
 | Slots 4–6 (center) | Straight throw |
 | Slots 7–9 (right) | Right-curving throw |
 
-All throws have `horizontalImpulse: 1.3` and `verticalImpulse: 0.6` — a strong, arcing pass.
+All throws use `h: 1.3, v: 0.6`.
 
-**Without the ball in hand (slots 1–5)**
+**Without the ball (slots 1–5)** — `LEFT_CLICK` does a gentle bump (`h: 0.3, v: 0.4`). If an opponent is carrying the ball, this knocks it loose.
 
-Left-clicking the ball without holding it will do a short, gentle bump (`h: 0.3, v: 0.4`). If an opponent is currently carrying the ball, the bump knocks it out of their hand and sends it forward — useful for interceptions and quick deflections.
-
-**Grabbing the ball from an opponent (slots 6–9)**
-
-If another player is holding the ball, you can steal it by selecting slots 6–9 and left-clicking them. The `GRAB` action releases the ball from their possession and immediately attaches it to you.
+**Steal from opponent (slots 6–9)** — `LEFT_CLICK` an opponent holding the ball to trigger `GRAB` and take it from them.
 
 #### How to Play Summary
 
 | Action | Input | Condition | Effect |
 |--------|-------|-----------|--------|
-| Bump | `LEFT_CLICK` (slots 1–5) | Not holding ball | Gentle forward bump; knocks the ball out of an opponent's hand if they are carrying it |
-| Grab | `LEFT_CLICK` (slots 6–9) | Not holding ball | Pick up the ball; steals it directly from an opponent if they are currently holding it |
-| Throw left | `LEFT_CLICK` (slots 1–3) | Holding ball | Throw with left spin |
-| Throw straight | `LEFT_CLICK` (slots 4–6) | Holding ball | Throw straight |
-| Throw right | `LEFT_CLICK` (slots 7–9) | Holding ball | Throw with right spin |
+| Bump | `LEFT_CLICK` (slots 1–5) | Not holding ball | Gentle forward bump; knocks ball loose from opponent |
+| Grab | `LEFT_CLICK` (slots 6–9) | Not holding ball | Pick up / steal the ball |
+| Throw left | `LEFT_CLICK` (slots 1–3) | Holding ball | Left-spin throw |
+| Throw straight | `LEFT_CLICK` (slots 4–6) | Holding ball | Straight throw |
+| Throw right | `LEFT_CLICK` (slots 7–9) | Holding ball | Right-spin throw |
 
 #### Configuration
 
@@ -427,9 +453,13 @@ render:
   modelScale: 1.0
   visualItem:
     typeName: PLAYER_HEAD,397
-    amount: '1'
-    durability: '3'
+    amount: "1"
+    durability: "3"
+    displayName: null
     skinBase64: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHBzOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzhlNGE3MGI3YmJjZDdhOGMzMjJkNTIyNTIwNDkxYTI3ZWE2YjgzZDYwZWNmOTYxZDJiNGVmYmJmOWY2MDVkIn19fQ==
+    lore: null
+    nbt: null
+    component: null
   rotationEnabled: true
   visualVerticalOffset: -1.0
   renderDistance: 60
@@ -459,7 +489,11 @@ interactions:
     horizontalImpulse: 0.3
     verticalImpulse: 0.4
     spinImpulse: 0.0
-    effectName: ''
+    postImpulseTicks: 0
+    postPitchInfluence: 0.0
+    postPitchClampAngle: 0.0
+    postYawSpinScale: 0.0
+    effectName: ""
   # Grab — pick up the ball (slots 6–9)
   - triggerType: LEFT_CLICK
     conditionHotBarRangeStart: 5
@@ -469,7 +503,11 @@ interactions:
     horizontalImpulse: 0.0
     verticalImpulse: 0.0
     spinImpulse: 0.0
-    effectName: ''
+    postImpulseTicks: 0
+    postPitchInfluence: 0.0
+    postPitchClampAngle: 0.0
+    postYawSpinScale: 0.0
+    effectName: ""
   # Throw left — left spin (slots 1–3, holding ball)
   - triggerType: LEFT_CLICK
     conditionHotBarRangeStart: 0
@@ -479,6 +517,10 @@ interactions:
     horizontalImpulse: 1.3
     verticalImpulse: 0.6
     spinImpulse: -2.0
+    postImpulseTicks: 0
+    postPitchInfluence: 0.0
+    postPitchClampAngle: 0.0
+    postYawSpinScale: 0.0
     effectName: ball_kick
   # Throw straight (slots 4–6, holding ball)
   - triggerType: LEFT_CLICK
@@ -489,6 +531,10 @@ interactions:
     horizontalImpulse: 1.3
     verticalImpulse: 0.6
     spinImpulse: 0.0
+    postImpulseTicks: 0
+    postPitchInfluence: 0.0
+    postPitchClampAngle: 0.0
+    postYawSpinScale: 0.0
     effectName: ball_kick
   # Throw right — right spin (slots 7–9, holding ball)
   - triggerType: LEFT_CLICK
@@ -499,6 +545,10 @@ interactions:
     horizontalImpulse: 1.3
     verticalImpulse: 0.6
     spinImpulse: 2.0
+    postImpulseTicks: 0
+    postPitchInfluence: 0.0
+    postPitchClampAngle: 0.0
+    postYawSpinScale: 0.0
     effectName: ball_kick
 ```
 
@@ -512,14 +562,14 @@ ballName: hand_ball
 
 ## Creating a Custom Ball
 
-1. Create a new file in `/plugins/BlockBall/ball/`, for example `my_ball.yml`.
-2. Set `name: my_ball` at the top of the file.
-3. Copy the `render`, `physics`, and `interactions` sections from one of the example files as a starting point.
-4. Adjust the properties to your liking.
-5. Set `ballName: my_ball` in your arena file and reload the arena.
+1. Create a new file in `/plugins/BlockBall/ball/`, e.g. `my_ball.yml`.
+2. Set `name: my_ball` at the top.
+3. Copy `render`, `physics`, and `interactions` from an existing ball as a starting point.
+4. Adjust properties as needed.
+5. Set `ballName: my_ball` in your arena file and reload.
 
 !!! tip "Changing the Ball Texture"
-    Find a Minecraft head texture you like on a site like [minecraft-heads.com](https://minecraft-heads.com). Copy the **Value** field (a Base64 string) and paste it into `visualItem.skinBase64`.
+    Find a Minecraft head texture on [minecraft-heads.com](https://minecraft-heads.com). Copy the **Value** (Base64) into `visualItem.skinBase64`.
 
 !!! tip "Tuning Physics"
-    Start with `gravityModifier`, `bounciness`, and `rollingFriction` — these three values have the biggest impact on how the ball feels. Small changes (e.g. `0.01`) can make a noticeable difference.
+    Start with `gravityModifier`, `bounciness`, and `rollingFriction` — they have the biggest impact on feel. Small changes (~`0.01`) go a long way.
