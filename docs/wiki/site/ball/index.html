@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -29,7 +29,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
       
       
 
@@ -1312,7 +1312,7 @@
 
 
 <h1 id="customizing-the-ball">Customizing the Ball</h1>
-<p>BlockBall separates ball behavior from arena configuration. Every ball is defined in its own YAML file inside the <code>/plugins/BlockBall/ball/</code> directory. Each file describes the visual appearance, the physics simulation, and exactly how players interact with the ball. You can create as many ball types as you like and switch between them per arena.</p>
+<p>Each ball is defined in its own YAML file inside <code>/plugins/BlockBall/ball/</code>. Files cover appearance, physics, and player interactions. You can create as many ball types as you like and switch between them per arena.</p>
 <hr />
 <h2 id="setting-the-ball-for-an-arena">Setting the Ball for an Arena</h2>
 <p>Open your arena file at <code>/plugins/BlockBall/arena/&lt;arena_name&gt;.yml</code> and set the <code>ballName</code> property to the <code>name</code> value of the ball file you want to use:</p>
@@ -1377,8 +1377,8 @@
 <span class="w">  </span><span class="nt">modelScale</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span>
 <span class="w">  </span><span class="nt">visualItem</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">typeName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PLAYER_HEAD,397</span>
-<span class="w">    </span><span class="nt">amount</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;1&#39;</span>
-<span class="w">    </span><span class="nt">durability</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;3&#39;</span>
+<span class="w">    </span><span class="nt">amount</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1&quot;</span>
+<span class="w">    </span><span class="nt">durability</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;3&quot;</span>
 <span class="w">    </span><span class="nt">displayName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span>
 <span class="w">    </span><span class="nt">skinBase64</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHBzOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzhlNGE3MGI3YmJjZDdhOGMzMjJkNTIyNTIwNDkxYTI3ZWE2YjgzZDYwZWNmOTYxZDJiNGVmYmJmOWY2MDVkIn19fQ==</span>
 <span class="w">    </span><span class="nt">lore</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span>
@@ -1462,12 +1462,12 @@
 <span class="w">  </span><span class="nt">interactionBoundsSize</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.5</span>
 <span class="w">  </span><span class="nt">collisionBoundsSize</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span>
 <span class="w">  </span><span class="nt">verticalOffset</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-0.3</span>
-<span class="w">  </span><span class="nt">bounciness</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.7</span>
+<span class="w">  </span><span class="nt">bounciness</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.4</span>
 <span class="w">  </span><span class="nt">mass</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span>
 <span class="w">  </span><span class="nt">restVelocityThreshold</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.01</span>
-<span class="w">  </span><span class="nt">gravityModifier</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.07</span>
-<span class="w">  </span><span class="nt">airDrag</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.001</span>
-<span class="w">  </span><span class="nt">rollingFriction</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.1</span>
+<span class="w">  </span><span class="nt">gravityModifier</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.06</span>
+<span class="w">  </span><span class="nt">airDrag</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.002</span>
+<span class="w">  </span><span class="nt">rollingFriction</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.04</span>
 <span class="w">  </span><span class="nt">spinDrag</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.05</span>
 <span class="w">  </span><span class="nt">curveMultiplier</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.05</span>
 <span class="w">  </span><span class="nt">globalInteractionCooldownTicks</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span>
@@ -1519,6 +1519,22 @@
 <td>Initial rotational spin around the Y-axis. Negative = left curve (slice), positive = right curve (hook).</td>
 </tr>
 <tr>
+<td><code>postImpulseTicks</code></td>
+<td>Ticks to wait before sampling the player's pitch/yaw for mid-flight steering. <code>0</code> disables it.</td>
+</tr>
+<tr>
+<td><code>postPitchInfluence</code></td>
+<td>How much camera pitch adds vertical force after <code>postImpulseTicks</code>. <code>0.0</code> = no steering, <code>1.0</code> = full impulse as vertical force.</td>
+</tr>
+<tr>
+<td><code>postPitchClampAngle</code></td>
+<td>Max pitch angle for steering. Minecraft: <code>-90°</code> = straight up, <code>+90°</code> = straight down. <code>0.0</code> disables downward steering; <code>90.0</code> allows it.</td>
+</tr>
+<tr>
+<td><code>postYawSpinScale</code></td>
+<td>How much horizontal mouse movement (yaw change) adds spin mid-flight. A 90° flick with scale <code>0.5</code> adds ~0.25 spin. Range: <code>0.1</code>–<code>1.0</code>.</td>
+</tr>
+<tr>
 <td><code>effectName</code></td>
 <td>Name of a particle/sound effect to play on trigger. Leave empty for no effect.</td>
 </tr>
@@ -1549,10 +1565,10 @@
 </table>
 <hr />
 <h2 id="built-in-ball-examples">Built-In Ball Examples</h2>
-<p>BlockBall ships with three pre-configured ball files that demonstrate different gameplay styles. They are all found in <code>/plugins/BlockBall/ball/</code>.</p>
+<p>Three pre-configured ball files are included in <code>/plugins/BlockBall/ball/</code>.</p>
 <hr />
 <h3 id="soccer_ballyml-default-soccer-ball"><code>soccer_ball.yml</code> — Default Soccer Ball</h3>
-<p>This is the standard ball used by all arenas unless you specify otherwise. It offers straightforward controls: walk into the ball to dribble it forward, left-click to kick it, and sprint-click for a powerful shot.</p>
+<p>The default ball used by all arenas unless specified otherwise. Walk into the ball to dribble, left-click to kick with camera-based steering.</p>
 <h4 id="how-to-play">How to Play</h4>
 <table>
 <thead>
@@ -1571,25 +1587,31 @@
 <tr>
 <td>Standard kick</td>
 <td><code>LEFT_CLICK</code></td>
-<td>Kicks the ball forward at a medium arc</td>
+<td>Kicks the ball forward at a medium-low arc</td>
 </tr>
 <tr>
-<td>Power shot</td>
+<td>Powered kick</td>
 <td><code>SPRINT</code> + <code>LEFT_CLICK</code></td>
-<td>Blasts the ball with maximum height and force</td>
+<td>Kicks the ball forward at a medium arc with extra oomph</td>
 </tr>
 </tbody>
 </table>
-<p>All interactions work regardless of which hotbar slot is selected (slots 0–8).</p>
+<p>All interactions work across all hotbar slots (0–8).</p>
+<p><strong>Mid-Flight Camera Steering</strong></p>
+<p>Both kicks sample your camera 7 ticks after firing. Looking up adds lift (<code>postPitchInfluence</code>), swiping sideways adds curve spin (<code>postYawSpinScale</code>).</p>
 <h4 id="configuration">Configuration</h4>
 <div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">soccer_ball</span>
 <span class="nt">render</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">modelScale</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span>
 <span class="w">  </span><span class="nt">visualItem</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">typeName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PLAYER_HEAD,397</span>
-<span class="w">    </span><span class="nt">amount</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;1&#39;</span>
-<span class="w">    </span><span class="nt">durability</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;3&#39;</span>
+<span class="w">    </span><span class="nt">amount</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1&quot;</span>
+<span class="w">    </span><span class="nt">durability</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;3&quot;</span>
+<span class="w">    </span><span class="nt">displayName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span>
 <span class="w">    </span><span class="nt">skinBase64</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHBzOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzhlNGE3MGI3YmJjZDdhOGMzMjJkNTIyNTIwNDkxYTI3ZWE2YjgzZDYwZWNmOTYxZDJiNGVmYmJmOWY2MDVkIn19fQ==</span>
+<span class="w">    </span><span class="nt">lore</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span>
+<span class="w">    </span><span class="nt">nbt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span>
+<span class="w">    </span><span class="nt">component</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span>
 <span class="w">  </span><span class="nt">rotationEnabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">  </span><span class="nt">visualVerticalOffset</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-1.0</span>
 <span class="w">  </span><span class="nt">renderDistance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span>
@@ -1598,12 +1620,12 @@
 <span class="w">  </span><span class="nt">interactionBoundsSize</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.5</span>
 <span class="w">  </span><span class="nt">collisionBoundsSize</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span>
 <span class="w">  </span><span class="nt">verticalOffset</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-0.3</span>
-<span class="w">  </span><span class="nt">bounciness</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.7</span>
+<span class="w">  </span><span class="nt">bounciness</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.4</span>
 <span class="w">  </span><span class="nt">mass</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span>
 <span class="w">  </span><span class="nt">restVelocityThreshold</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.01</span>
-<span class="w">  </span><span class="nt">gravityModifier</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.07</span>
-<span class="w">  </span><span class="nt">airDrag</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.001</span>
-<span class="w">  </span><span class="nt">rollingFriction</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.1</span>
+<span class="w">  </span><span class="nt">gravityModifier</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.06</span>
+<span class="w">  </span><span class="nt">airDrag</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.002</span>
+<span class="w">  </span><span class="nt">rollingFriction</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.04</span>
 <span class="w">  </span><span class="nt">spinDrag</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.05</span>
 <span class="w">  </span><span class="nt">curveMultiplier</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.05</span>
 <span class="w">  </span><span class="nt">globalInteractionCooldownTicks</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span>
@@ -1615,27 +1637,39 @@
 <span class="w">  </span><span class="nt">conditionHotBarRangeEnd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8</span>
 <span class="w">  </span><span class="nt">conditionGrabbedBySelf</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 <span class="w">  </span><span class="nt">executionType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SHOOT</span>
-<span class="w">  </span><span class="nt">horizontalImpulse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span>
+<span class="w">  </span><span class="nt">horizontalImpulse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.6</span>
 <span class="w">  </span><span class="nt">verticalImpulse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.2</span>
 <span class="w">  </span><span class="nt">spinImpulse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
-<span class="w">  </span><span class="nt">effectName</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;&#39;</span>
+<span class="w">  </span><span class="nt">postImpulseTicks</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+<span class="w">  </span><span class="nt">postPitchInfluence</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
+<span class="w">  </span><span class="nt">postPitchClampAngle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
+<span class="w">  </span><span class="nt">postYawSpinScale</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
+<span class="w">  </span><span class="nt">effectName</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">triggerType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LEFT_CLICK</span>
 <span class="w">  </span><span class="nt">conditionHotBarRangeStart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
 <span class="w">  </span><span class="nt">conditionHotBarRangeEnd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8</span>
 <span class="w">  </span><span class="nt">conditionGrabbedBySelf</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 <span class="w">  </span><span class="nt">executionType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SHOOT</span>
-<span class="w">  </span><span class="nt">horizontalImpulse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span>
-<span class="w">  </span><span class="nt">verticalImpulse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.6</span>
+<span class="w">  </span><span class="nt">horizontalImpulse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.9</span>
+<span class="w">  </span><span class="nt">verticalImpulse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.5</span>
 <span class="w">  </span><span class="nt">spinImpulse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
+<span class="w">  </span><span class="nt">postImpulseTicks</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7</span>
+<span class="w">  </span><span class="nt">postPitchInfluence</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.5</span>
+<span class="w">  </span><span class="nt">postPitchClampAngle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
+<span class="w">  </span><span class="nt">postYawSpinScale</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span>
 <span class="w">  </span><span class="nt">effectName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ball_kick</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">triggerType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SPRINT_LEFT_CLICK</span>
 <span class="w">  </span><span class="nt">conditionHotBarRangeStart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
 <span class="w">  </span><span class="nt">conditionHotBarRangeEnd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8</span>
 <span class="w">  </span><span class="nt">conditionGrabbedBySelf</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 <span class="w">  </span><span class="nt">executionType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SHOOT</span>
-<span class="w">  </span><span class="nt">horizontalImpulse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span>
-<span class="w">  </span><span class="nt">verticalImpulse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span>
+<span class="w">  </span><span class="nt">horizontalImpulse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.9</span>
+<span class="w">  </span><span class="nt">verticalImpulse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.6</span>
 <span class="w">  </span><span class="nt">spinImpulse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
+<span class="w">  </span><span class="nt">postImpulseTicks</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7</span>
+<span class="w">  </span><span class="nt">postPitchInfluence</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.5</span>
+<span class="w">  </span><span class="nt">postPitchClampAngle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
+<span class="w">  </span><span class="nt">postYawSpinScale</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span>
 <span class="w">  </span><span class="nt">effectName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ball_kick</span>
 </code></pre></div>
 <p>To use this ball in an arena:</p>
@@ -1643,31 +1677,28 @@
 </code></pre></div>
 <hr />
 <h3 id="curve_soccer_ballyml-curve-soccer-ball"><code>curve_soccer_ball.yml</code> — Curve Soccer Ball</h3>
-<p>An advanced soccer ball that uses the hotbar slot to determine the direction of spin applied to the ball. Players who position the selected slot to the left, center, or right of their hotbar can curve the ball in different directions. Sprinting adds extra height and speed, and crouching while clicking lets you play a short backpass.</p>
+<p>Combines camera-based steering (standing) with hotbar-based spin control (sprinting). <strong>Standing</strong>: <code>LEFT_CLICK</code> uses camera pitch/yaw for lift and curve. <strong>Sprinting</strong>: <code>SPRINT</code> + <code>LEFT_CLICK</code> uses the active hotbar slot for spin direction. <code>SNEAK</code> + <code>LEFT_CLICK</code> plays a short backpass.</p>
 <h4 id="how-to-play_1">How to Play</h4>
-<p>The <strong>active hotbar slot</strong> controls the curve direction:</p>
+<p><strong>Standing kick</strong> — <code>LEFT_CLICK</code> samples your camera 7 ticks after firing. Looking up adds lift, swiping sideways adds spin.</p>
+<p><strong>Power shot</strong> — <code>SPRINT</code> + <code>LEFT_CLICK</code> uses the active hotbar slot for spin direction:</p>
 <table>
 <thead>
 <tr>
 <th>Hotbar Slots</th>
-<th>Kick (<code>LEFT_CLICK</code>)</th>
 <th>Power Shot (<code>SPRINT_LEFT_CLICK</code>)</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>Slots 1–3 (left)</td>
-<td>Left-curving kick</td>
 <td>Left-curving power shot</td>
 </tr>
 <tr>
 <td>Slots 4–6 (center)</td>
-<td>Straight kick</td>
 <td>Straight power shot</td>
 </tr>
 <tr>
 <td>Slots 7–9 (right)</td>
-<td>Right-curving kick</td>
 <td>Right-curving power shot</td>
 </tr>
 </tbody>
@@ -1691,14 +1722,14 @@
 <td>Short forward touch with no spin (all slots)</td>
 </tr>
 <tr>
-<td>Kick</td>
-<td><code>LEFT_CLICK</code></td>
-<td>Curved or straight kick depending on hotbar</td>
+<td>Standing kick</td>
+<td><code>LEFT_CLICK</code> (not sprinting)</td>
+<td>Medium-arc kick with camera-based pitch/yaw steering</td>
 </tr>
 <tr>
 <td>Power shot</td>
 <td><code>SPRINT</code> + <code>LEFT_CLICK</code></td>
-<td>High-arc curved or straight power shot</td>
+<td>High-arc curved or straight power shot based on hotbar slot</td>
 </tr>
 <tr>
 <td>Backpass / Cushion</td>
@@ -1707,16 +1738,20 @@
 </tr>
 </tbody>
 </table>
-<p>The <code>curveMultiplier</code> in the physics section determines how dramatically the spin bends the flight path. The default is <code>0.05</code>; raise it to create sharper curves.</p>
+<p><code>curveMultiplier</code> determines how much spin bends the flight path. Default is <code>0.05</code>; raise it for sharper curves.</p>
 <h4 id="configuration_1">Configuration</h4>
 <div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">curve_soccer_ball</span>
 <span class="nt">render</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">modelScale</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span>
 <span class="w">  </span><span class="nt">visualItem</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">typeName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PLAYER_HEAD,397</span>
-<span class="w">    </span><span class="nt">amount</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;1&#39;</span>
-<span class="w">    </span><span class="nt">durability</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;3&#39;</span>
+<span class="w">    </span><span class="nt">amount</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1&quot;</span>
+<span class="w">    </span><span class="nt">durability</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;3&quot;</span>
+<span class="w">    </span><span class="nt">displayName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span>
 <span class="w">    </span><span class="nt">skinBase64</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHBzOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzhlNGE3MGI3YmJjZDdhOGMzMjJkNTIyNTIwNDkxYTI3ZWE2YjgzZDYwZWNmOTYxZDJiNGVmYmJmOWY2MDVkIn19fQ==</span>
+<span class="w">    </span><span class="nt">lore</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span>
+<span class="w">    </span><span class="nt">nbt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span>
+<span class="w">    </span><span class="nt">component</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span>
 <span class="w">  </span><span class="nt">rotationEnabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">  </span><span class="nt">visualVerticalOffset</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-1.0</span>
 <span class="w">  </span><span class="nt">renderDistance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span>
@@ -1725,12 +1760,12 @@
 <span class="w">  </span><span class="nt">interactionBoundsSize</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.5</span>
 <span class="w">  </span><span class="nt">collisionBoundsSize</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span>
 <span class="w">  </span><span class="nt">verticalOffset</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-0.3</span>
-<span class="w">  </span><span class="nt">bounciness</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.7</span>
+<span class="w">  </span><span class="nt">bounciness</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.4</span>
 <span class="w">  </span><span class="nt">mass</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span>
 <span class="w">  </span><span class="nt">restVelocityThreshold</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.01</span>
-<span class="w">  </span><span class="nt">gravityModifier</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.07</span>
-<span class="w">  </span><span class="nt">airDrag</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.001</span>
-<span class="w">  </span><span class="nt">rollingFriction</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.1</span>
+<span class="w">  </span><span class="nt">gravityModifier</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.06</span>
+<span class="w">  </span><span class="nt">airDrag</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.002</span>
+<span class="w">  </span><span class="nt">rollingFriction</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.04</span>
 <span class="w">  </span><span class="nt">spinDrag</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.05</span>
 <span class="w">  </span><span class="nt">curveMultiplier</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.05</span>
 <span class="w">  </span><span class="nt">globalInteractionCooldownTicks</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span>
@@ -1743,39 +1778,27 @@
 <span class="w">  </span><span class="nt">conditionHotBarRangeEnd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8</span>
 <span class="w">  </span><span class="nt">conditionGrabbedBySelf</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 <span class="w">  </span><span class="nt">executionType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SHOOT</span>
-<span class="w">  </span><span class="nt">horizontalImpulse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span>
+<span class="w">  </span><span class="nt">horizontalImpulse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.6</span>
 <span class="w">  </span><span class="nt">verticalImpulse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.2</span>
 <span class="w">  </span><span class="nt">spinImpulse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
-<span class="w">  </span><span class="nt">effectName</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;&#39;</span>
-<span class="w">  </span><span class="c1"># Kick — left slots → left spin</span>
+<span class="w">  </span><span class="nt">postImpulseTicks</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+<span class="w">  </span><span class="nt">postPitchInfluence</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
+<span class="w">  </span><span class="nt">postPitchClampAngle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
+<span class="w">  </span><span class="nt">postYawSpinScale</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
+<span class="w">  </span><span class="nt">effectName</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span>
+<span class="w">  </span><span class="c1"># Standing kick — camera-based pitch/yaw steering (all slots)</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">triggerType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LEFT_CLICK</span>
 <span class="w">  </span><span class="nt">conditionHotBarRangeStart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
-<span class="w">  </span><span class="nt">conditionHotBarRangeEnd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
-<span class="w">  </span><span class="nt">conditionGrabbedBySelf</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
-<span class="w">  </span><span class="nt">executionType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SHOOT</span>
-<span class="w">  </span><span class="nt">horizontalImpulse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span>
-<span class="w">  </span><span class="nt">verticalImpulse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.6</span>
-<span class="w">  </span><span class="nt">spinImpulse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-2.0</span>
-<span class="w">  </span><span class="nt">effectName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ball_kick</span>
-<span class="w">  </span><span class="c1"># Kick — center slots → no spin</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">triggerType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LEFT_CLICK</span>
-<span class="w">  </span><span class="nt">conditionHotBarRangeStart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
-<span class="w">  </span><span class="nt">conditionHotBarRangeEnd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
-<span class="w">  </span><span class="nt">conditionGrabbedBySelf</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
-<span class="w">  </span><span class="nt">executionType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SHOOT</span>
-<span class="w">  </span><span class="nt">horizontalImpulse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span>
-<span class="w">  </span><span class="nt">verticalImpulse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.6</span>
-<span class="w">  </span><span class="nt">spinImpulse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
-<span class="w">  </span><span class="nt">effectName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ball_kick</span>
-<span class="w">  </span><span class="c1"># Kick — right slots → right spin</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">triggerType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LEFT_CLICK</span>
-<span class="w">  </span><span class="nt">conditionHotBarRangeStart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">6</span>
 <span class="w">  </span><span class="nt">conditionHotBarRangeEnd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8</span>
 <span class="w">  </span><span class="nt">conditionGrabbedBySelf</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 <span class="w">  </span><span class="nt">executionType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SHOOT</span>
-<span class="w">  </span><span class="nt">horizontalImpulse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span>
+<span class="w">  </span><span class="nt">horizontalImpulse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.9</span>
 <span class="w">  </span><span class="nt">verticalImpulse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.6</span>
-<span class="w">  </span><span class="nt">spinImpulse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2.0</span>
+<span class="w">  </span><span class="nt">spinImpulse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
+<span class="w">  </span><span class="nt">postImpulseTicks</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7</span>
+<span class="w">  </span><span class="nt">postPitchInfluence</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.5</span>
+<span class="w">  </span><span class="nt">postPitchClampAngle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
+<span class="w">  </span><span class="nt">postYawSpinScale</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span>
 <span class="w">  </span><span class="nt">effectName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ball_kick</span>
 <span class="w">  </span><span class="c1"># Power shot — left slots → left spin</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">triggerType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SPRINT_LEFT_CLICK</span>
@@ -1784,8 +1807,12 @@
 <span class="w">  </span><span class="nt">conditionGrabbedBySelf</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 <span class="w">  </span><span class="nt">executionType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SHOOT</span>
 <span class="w">  </span><span class="nt">horizontalImpulse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span>
-<span class="w">  </span><span class="nt">verticalImpulse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span>
+<span class="w">  </span><span class="nt">verticalImpulse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.7</span>
 <span class="w">  </span><span class="nt">spinImpulse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-2.0</span>
+<span class="w">  </span><span class="nt">postImpulseTicks</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+<span class="w">  </span><span class="nt">postPitchInfluence</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
+<span class="w">  </span><span class="nt">postPitchClampAngle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
+<span class="w">  </span><span class="nt">postYawSpinScale</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
 <span class="w">  </span><span class="nt">effectName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ball_kick</span>
 <span class="w">  </span><span class="c1"># Power shot — center slots → no spin</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">triggerType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SPRINT_LEFT_CLICK</span>
@@ -1794,8 +1821,12 @@
 <span class="w">  </span><span class="nt">conditionGrabbedBySelf</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 <span class="w">  </span><span class="nt">executionType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SHOOT</span>
 <span class="w">  </span><span class="nt">horizontalImpulse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span>
-<span class="w">  </span><span class="nt">verticalImpulse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span>
+<span class="w">  </span><span class="nt">verticalImpulse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.7</span>
 <span class="w">  </span><span class="nt">spinImpulse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
+<span class="w">  </span><span class="nt">postImpulseTicks</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+<span class="w">  </span><span class="nt">postPitchInfluence</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
+<span class="w">  </span><span class="nt">postPitchClampAngle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
+<span class="w">  </span><span class="nt">postYawSpinScale</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
 <span class="w">  </span><span class="nt">effectName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ball_kick</span>
 <span class="w">  </span><span class="c1"># Power shot — right slots → right spin</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">triggerType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SPRINT_LEFT_CLICK</span>
@@ -1804,8 +1835,12 @@
 <span class="w">  </span><span class="nt">conditionGrabbedBySelf</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 <span class="w">  </span><span class="nt">executionType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SHOOT</span>
 <span class="w">  </span><span class="nt">horizontalImpulse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span>
-<span class="w">  </span><span class="nt">verticalImpulse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span>
+<span class="w">  </span><span class="nt">verticalImpulse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.7</span>
 <span class="w">  </span><span class="nt">spinImpulse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2.0</span>
+<span class="w">  </span><span class="nt">postImpulseTicks</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+<span class="w">  </span><span class="nt">postPitchInfluence</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
+<span class="w">  </span><span class="nt">postPitchClampAngle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
+<span class="w">  </span><span class="nt">postYawSpinScale</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
 <span class="w">  </span><span class="nt">effectName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ball_kick</span>
 <span class="w">  </span><span class="c1"># Sneak click — short backpass, all slots</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">triggerType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SNEAK_LEFT_CLICK</span>
@@ -1816,6 +1851,10 @@
 <span class="w">  </span><span class="nt">horizontalImpulse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-0.6</span>
 <span class="w">  </span><span class="nt">verticalImpulse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.2</span>
 <span class="w">  </span><span class="nt">spinImpulse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
+<span class="w">  </span><span class="nt">postImpulseTicks</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+<span class="w">  </span><span class="nt">postPitchInfluence</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
+<span class="w">  </span><span class="nt">postPitchClampAngle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
+<span class="w">  </span><span class="nt">postYawSpinScale</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
 <span class="w">  </span><span class="nt">effectName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ball_kick</span>
 </code></pre></div>
 <p>To use this ball in an arena:</p>
@@ -1823,12 +1862,10 @@
 </code></pre></div>
 <hr />
 <h3 id="hand_ballyml-handball"><code>hand_ball.yml</code> — Handball</h3>
-<p>A handball-inspired configuration that introduces a <strong>grab mechanic</strong>. Players can pick up the ball and carry it, then throw it with spin control based on their active hotbar slot — much like a handball game. Without the ball in hand, clicking simply bumps the ball forward gently.</p>
+<p>Introduces a <strong>grab mechanic</strong> — pick up the ball and throw it with hotbar-controlled spin. Without the ball, clicking bumps it forward gently.</p>
 <h4 id="how-to-play_2">How to Play</h4>
-<p><strong>Step 1 — Pick up the ball</strong></p>
-<p>When you are near the ball and do not have it, select <strong>hotbar slot 6–9</strong> and left-click the ball. This triggers a <code>GRAB</code> action and the ball attaches to you.</p>
-<p><strong>Step 2 — Throw the ball</strong></p>
-<p>Once you are holding the ball, use <code>LEFT_CLICK</code> to throw it. The active hotbar slot controls the throw direction:</p>
+<p><strong>Pick up</strong> — select <strong>hotbar slot 6–9</strong> and left-click the ball to trigger <code>GRAB</code>.</p>
+<p><strong>Throw</strong> — while holding the ball, <code>LEFT_CLICK</code> throws it. The active hotbar slot controls the direction:</p>
 <table>
 <thead>
 <tr>
@@ -1851,11 +1888,9 @@
 </tr>
 </tbody>
 </table>
-<p>All throws have <code>horizontalImpulse: 1.3</code> and <code>verticalImpulse: 0.6</code> — a strong, arcing pass.</p>
-<p><strong>Without the ball in hand (slots 1–5)</strong></p>
-<p>Left-clicking the ball without holding it will do a short, gentle bump (<code>h: 0.3, v: 0.4</code>). If an opponent is currently carrying the ball, the bump knocks it out of their hand and sends it forward — useful for interceptions and quick deflections.</p>
-<p><strong>Grabbing the ball from an opponent (slots 6–9)</strong></p>
-<p>If another player is holding the ball, you can steal it by selecting slots 6–9 and left-clicking them. The <code>GRAB</code> action releases the ball from their possession and immediately attaches it to you.</p>
+<p>All throws use <code>h: 1.3, v: 0.6</code>.</p>
+<p><strong>Without the ball (slots 1–5)</strong> — <code>LEFT_CLICK</code> does a gentle bump (<code>h: 0.3, v: 0.4</code>). If an opponent is carrying the ball, this knocks it loose.</p>
+<p><strong>Steal from opponent (slots 6–9)</strong> — <code>LEFT_CLICK</code> an opponent holding the ball to trigger <code>GRAB</code> and take it from them.</p>
 <h4 id="how-to-play-summary">How to Play Summary</h4>
 <table>
 <thead>
@@ -1871,31 +1906,31 @@
 <td>Bump</td>
 <td><code>LEFT_CLICK</code> (slots 1–5)</td>
 <td>Not holding ball</td>
-<td>Gentle forward bump; knocks the ball out of an opponent's hand if they are carrying it</td>
+<td>Gentle forward bump; knocks ball loose from opponent</td>
 </tr>
 <tr>
 <td>Grab</td>
 <td><code>LEFT_CLICK</code> (slots 6–9)</td>
 <td>Not holding ball</td>
-<td>Pick up the ball; steals it directly from an opponent if they are currently holding it</td>
+<td>Pick up / steal the ball</td>
 </tr>
 <tr>
 <td>Throw left</td>
 <td><code>LEFT_CLICK</code> (slots 1–3)</td>
 <td>Holding ball</td>
-<td>Throw with left spin</td>
+<td>Left-spin throw</td>
 </tr>
 <tr>
 <td>Throw straight</td>
 <td><code>LEFT_CLICK</code> (slots 4–6)</td>
 <td>Holding ball</td>
-<td>Throw straight</td>
+<td>Straight throw</td>
 </tr>
 <tr>
 <td>Throw right</td>
 <td><code>LEFT_CLICK</code> (slots 7–9)</td>
 <td>Holding ball</td>
-<td>Throw with right spin</td>
+<td>Right-spin throw</td>
 </tr>
 </tbody>
 </table>
@@ -1905,9 +1940,13 @@
 <span class="w">  </span><span class="nt">modelScale</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span>
 <span class="w">  </span><span class="nt">visualItem</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">typeName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PLAYER_HEAD,397</span>
-<span class="w">    </span><span class="nt">amount</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;1&#39;</span>
-<span class="w">    </span><span class="nt">durability</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;3&#39;</span>
+<span class="w">    </span><span class="nt">amount</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1&quot;</span>
+<span class="w">    </span><span class="nt">durability</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;3&quot;</span>
+<span class="w">    </span><span class="nt">displayName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span>
 <span class="w">    </span><span class="nt">skinBase64</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHBzOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzhlNGE3MGI3YmJjZDdhOGMzMjJkNTIyNTIwNDkxYTI3ZWE2YjgzZDYwZWNmOTYxZDJiNGVmYmJmOWY2MDVkIn19fQ==</span>
+<span class="w">    </span><span class="nt">lore</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span>
+<span class="w">    </span><span class="nt">nbt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span>
+<span class="w">    </span><span class="nt">component</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span>
 <span class="w">  </span><span class="nt">rotationEnabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">  </span><span class="nt">visualVerticalOffset</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-1.0</span>
 <span class="w">  </span><span class="nt">renderDistance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span>
@@ -1937,7 +1976,11 @@
 <span class="w">    </span><span class="nt">horizontalImpulse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.3</span>
 <span class="w">    </span><span class="nt">verticalImpulse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.4</span>
 <span class="w">    </span><span class="nt">spinImpulse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
-<span class="w">    </span><span class="nt">effectName</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;&#39;</span>
+<span class="w">    </span><span class="nt">postImpulseTicks</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+<span class="w">    </span><span class="nt">postPitchInfluence</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
+<span class="w">    </span><span class="nt">postPitchClampAngle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
+<span class="w">    </span><span class="nt">postYawSpinScale</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
+<span class="w">    </span><span class="nt">effectName</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span>
 <span class="w">  </span><span class="c1"># Grab — pick up the ball (slots 6–9)</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">triggerType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LEFT_CLICK</span>
 <span class="w">    </span><span class="nt">conditionHotBarRangeStart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
@@ -1947,7 +1990,11 @@
 <span class="w">    </span><span class="nt">horizontalImpulse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
 <span class="w">    </span><span class="nt">verticalImpulse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
 <span class="w">    </span><span class="nt">spinImpulse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
-<span class="w">    </span><span class="nt">effectName</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;&#39;</span>
+<span class="w">    </span><span class="nt">postImpulseTicks</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+<span class="w">    </span><span class="nt">postPitchInfluence</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
+<span class="w">    </span><span class="nt">postPitchClampAngle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
+<span class="w">    </span><span class="nt">postYawSpinScale</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
+<span class="w">    </span><span class="nt">effectName</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span>
 <span class="w">  </span><span class="c1"># Throw left — left spin (slots 1–3, holding ball)</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">triggerType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LEFT_CLICK</span>
 <span class="w">    </span><span class="nt">conditionHotBarRangeStart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
@@ -1957,6 +2004,10 @@
 <span class="w">    </span><span class="nt">horizontalImpulse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.3</span>
 <span class="w">    </span><span class="nt">verticalImpulse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.6</span>
 <span class="w">    </span><span class="nt">spinImpulse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-2.0</span>
+<span class="w">    </span><span class="nt">postImpulseTicks</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+<span class="w">    </span><span class="nt">postPitchInfluence</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
+<span class="w">    </span><span class="nt">postPitchClampAngle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
+<span class="w">    </span><span class="nt">postYawSpinScale</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
 <span class="w">    </span><span class="nt">effectName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ball_kick</span>
 <span class="w">  </span><span class="c1"># Throw straight (slots 4–6, holding ball)</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">triggerType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LEFT_CLICK</span>
@@ -1967,6 +2018,10 @@
 <span class="w">    </span><span class="nt">horizontalImpulse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.3</span>
 <span class="w">    </span><span class="nt">verticalImpulse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.6</span>
 <span class="w">    </span><span class="nt">spinImpulse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
+<span class="w">    </span><span class="nt">postImpulseTicks</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+<span class="w">    </span><span class="nt">postPitchInfluence</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
+<span class="w">    </span><span class="nt">postPitchClampAngle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
+<span class="w">    </span><span class="nt">postYawSpinScale</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
 <span class="w">    </span><span class="nt">effectName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ball_kick</span>
 <span class="w">  </span><span class="c1"># Throw right — right spin (slots 7–9, holding ball)</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">triggerType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LEFT_CLICK</span>
@@ -1977,6 +2032,10 @@
 <span class="w">    </span><span class="nt">horizontalImpulse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.3</span>
 <span class="w">    </span><span class="nt">verticalImpulse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.6</span>
 <span class="w">    </span><span class="nt">spinImpulse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2.0</span>
+<span class="w">    </span><span class="nt">postImpulseTicks</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+<span class="w">    </span><span class="nt">postPitchInfluence</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
+<span class="w">    </span><span class="nt">postPitchClampAngle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
+<span class="w">    </span><span class="nt">postYawSpinScale</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
 <span class="w">    </span><span class="nt">effectName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ball_kick</span>
 </code></pre></div>
 <p>To use this ball in an arena:</p>
@@ -1985,19 +2044,19 @@
 <hr />
 <h2 id="creating-a-custom-ball">Creating a Custom Ball</h2>
 <ol>
-<li>Create a new file in <code>/plugins/BlockBall/ball/</code>, for example <code>my_ball.yml</code>.</li>
-<li>Set <code>name: my_ball</code> at the top of the file.</li>
-<li>Copy the <code>render</code>, <code>physics</code>, and <code>interactions</code> sections from one of the example files as a starting point.</li>
-<li>Adjust the properties to your liking.</li>
-<li>Set <code>ballName: my_ball</code> in your arena file and reload the arena.</li>
+<li>Create a new file in <code>/plugins/BlockBall/ball/</code>, e.g. <code>my_ball.yml</code>.</li>
+<li>Set <code>name: my_ball</code> at the top.</li>
+<li>Copy <code>render</code>, <code>physics</code>, and <code>interactions</code> from an existing ball as a starting point.</li>
+<li>Adjust properties as needed.</li>
+<li>Set <code>ballName: my_ball</code> in your arena file and reload.</li>
 </ol>
 <div class="admonition tip">
 <p class="admonition-title">Changing the Ball Texture</p>
-<p>Find a Minecraft head texture you like on a site like <a href="https://minecraft-heads.com">minecraft-heads.com</a>. Copy the <strong>Value</strong> field (a Base64 string) and paste it into <code>visualItem.skinBase64</code>.</p>
+<p>Find a Minecraft head texture on <a href="https://minecraft-heads.com">minecraft-heads.com</a>. Copy the <strong>Value</strong> (Base64) into <code>visualItem.skinBase64</code>.</p>
 </div>
 <div class="admonition tip">
 <p class="admonition-title">Tuning Physics</p>
-<p>Start with <code>gravityModifier</code>, <code>bounciness</code>, and <code>rollingFriction</code> — these three values have the biggest impact on how the ball feels. Small changes (e.g. <code>0.01</code>) can make a noticeable difference.</p>
+<p>Start with <code>gravityModifier</code>, <code>bounciness</code>, and <code>rollingFriction</code> — they have the biggest impact on feel. Small changes (~<code>0.01</code>) go a long way.</p>
 </div>
 
 
@@ -2088,7 +2147,7 @@
       <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tabs", "content.tabs.link", "content.code.copy", "navigation.footer"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>
