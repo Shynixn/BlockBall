@@ -122,6 +122,11 @@ class SoccerBallImpl(
     private val playerFetchTimer = GameObjectIntervalTimer(meta.physics.fetchPlayerPositionsIntervalTicks * 50)
 
     /**
+     * Interval timer used to update the player inventory on grab.
+     */
+    private val grabbedBallUpdateTimer = GameObjectIntervalTimer(5000)
+
+    /**
      * Player whose mid-flight steering is pending. Null when no modification is scheduled.
      * Volatile because written on the main thread and read on the region coroutine thread.
      */
@@ -303,6 +308,10 @@ class SoccerBallImpl(
         }
 
         updateEntityForAllPlayers()
+
+        if (grabbedBallUpdateTimer.update(deltaMs) && grabbingPlayer != null) {
+            sendGrabbedInventory(grabbingPlayer!!)
+        }
     }
 
     /**
