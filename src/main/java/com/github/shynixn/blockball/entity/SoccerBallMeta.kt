@@ -154,6 +154,9 @@ class SoccerBallMeta : Element {
         @Comment("Enables or disables visual procedural rotation based on the ball's velocity vector.")
         var rotationEnabled: Boolean = true
 
+        @Comment("Enables or disables a dribbling animation when a player is moving while grabbing a ball")
+        var dribblingWhileGrabbedEnabled : Boolean = false
+
         @Comment("Visual model offset matching the entity presentation strictly to your texture profile.")
         var visualVerticalOffset: Double = -1.0
 
