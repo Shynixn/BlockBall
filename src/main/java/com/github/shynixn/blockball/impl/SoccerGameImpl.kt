@@ -990,9 +990,11 @@ abstract class SoccerGameImpl(
 
     fun executeCommandsWithPlaceHolder(players: Set<Player>, commands: List<CommandMeta>) {
         commandService.executeCommands(players.toList(), commands) { c, p ->
-            placeHolderService.resolvePlaceHolder(
+            val r = placeHolderService.resolvePlaceHolder(
                 c, p
             )
+            plugin.log.debug("[BlockBall] Executing command '$r' for player '${p?.name}")
+            r
         }
     }
 

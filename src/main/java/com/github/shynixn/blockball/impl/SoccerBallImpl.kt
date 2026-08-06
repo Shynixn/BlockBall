@@ -3,19 +3,15 @@ package com.github.shynixn.blockball.impl
 import com.github.shynixn.blockball.contract.SoccerBall
 import com.github.shynixn.blockball.entity.SoccerBallMeta
 import com.github.shynixn.blockball.enumeration.BallExecuteActionType
-import com.github.shynixn.blockball.enumeration.BallTriggerActionType
 import com.github.shynixn.blockball.enumeration.BallInputActionType
+import com.github.shynixn.blockball.enumeration.BallTriggerActionType
 import com.github.shynixn.blockball.event.BallActionEvent
 import com.github.shynixn.blockball.event.BallRayTraceEvent
 import com.github.shynixn.blockball.event.BallRemoveEvent
 import com.github.shynixn.mccoroutine.folia.launch
 import com.github.shynixn.mccoroutine.folia.regionDispatcher
-import com.github.shynixn.mcutils.common.Vector3d
-import com.github.shynixn.mcutils.common.Version
+import com.github.shynixn.mcutils.common.*
 import com.github.shynixn.mcutils.common.item.ItemService
-import com.github.shynixn.mcutils.common.log
-import com.github.shynixn.mcutils.common.toLocation
-import com.github.shynixn.mcutils.common.toVector3d
 import com.github.shynixn.mcutils.packet.api.PacketService
 import com.github.shynixn.mcutils.packet.api.RayTracingService
 import com.github.shynixn.mcutils.packet.api.meta.EntityAttribute
@@ -122,6 +118,11 @@ class SoccerBallImpl(
     private val playerFetchTimer = GameObjectIntervalTimer(meta.physics.fetchPlayerPositionsIntervalTicks * 50)
 
     /**
+     * Interval timer used to update the player inventory on grab.
+     */
+    private val grabbedBallUpdateTimer = GameObjectIntervalTimer(5000)
+
+    /**
      * Player whose mid-flight steering is pending. Null when no modification is scheduled.
      * Volatile because written on the main thread and read on the region coroutine thread.
      */
@@ -168,6 +169,11 @@ class SoccerBallImpl(
      * A specific player that has exclusive locking rights to interact with this ball.
      */
     override var lockedPlayer: Player? = null
+
+    private var grabTotalGrabbedTimeMs: Long = 0L
+    private var grabPositionCache = Vector(0.0, 0.0, 0.0)
+    private var grabPositionRefresh = GameObjectIntervalTimer(500)
+    private var grabIsMoving = false
 
     /**
      * Lets the given player grab the ball.
@@ -294,15 +300,52 @@ class SoccerBallImpl(
             checkPlayerTouchInteractions()
         }
 
+        val grabbingPlayer = grabbingPlayer
         if (grabbingPlayer != null) {
-            position = grabbingPlayer!!.location.toVector3d().addRelativeFront(1.0)
-            position.y += 1.0
+            playGrabbedBallAnimation(grabbingPlayer, deltaMs)
         } else {
             calculatePhysics(deltaMs)
             checkAndHandleStuckBall()
         }
 
         updateEntityForAllPlayers()
+
+        if (grabbedBallUpdateTimer.update(deltaMs) && grabbingPlayer != null) {
+            sendGrabbedInventory(grabbingPlayer)
+        }
+    }
+
+    private fun playGrabbedBallAnimation(grabbingPlayer: Player, deltaMs: Int) {
+        rotationDegrees = 0.0
+        val grabbingPlayerLocation = grabbingPlayer.location.toVector()
+        position = grabbingPlayer.location.toVector3d().addRelativeFront(0.6)
+
+        if (grabPositionRefresh.update(deltaMs)) {
+            val distanceMoved = grabbingPlayerLocation.distance(grabPositionCache)
+            if (distanceMoved > 0.2) {
+                grabIsMoving = true
+                grabPositionCache = grabbingPlayerLocation
+            } else {
+                grabIsMoving = false
+            }
+        }
+
+        val bounceAmplitude = 2.0
+        val bounceSpeed = 0.005
+        val baseOffsetY = -0.5
+        var bounceOffset = 0.0
+
+        if (grabIsMoving && meta.render.dribblingWhileGrabbedEnabled && grabbingPlayer.isOnGround) {
+            // Increment bounce timer ONLY while moving so the cycle progresses smoothly with movement
+            grabTotalGrabbedTimeMs += deltaMs
+            bounceOffset = Math.abs(Math.sin(grabTotalGrabbedTimeMs * bounceSpeed)) * bounceAmplitude
+
+        } else {
+            // When standing still, rest the ball (or reset timer if you want the cycle to start fresh next movement)
+            bounceOffset = 1.0
+        }
+
+        position.y += baseOffsetY + bounceOffset
     }
 
     /**
@@ -389,7 +432,8 @@ class SoccerBallImpl(
         // Track closest valid player violating interaction boundaries
         val playerHittingTheBall =
             playerLocationPairs.asSequence().map { e -> Pair(e.key, e.value.distance(ballLocation)) }
-                .filter { p -> p.second < hitboxSize }.sortedBy { e -> e.second }
+                .filter { p -> (grabbingPlayer == null || p.first != grabbingPlayer) && p.second < hitboxSize }
+                .sortedBy { e -> e.second }
                 .firstOrNull { e -> canPlayerInteractWithBall(e.first) }
 
         if (playerHittingTheBall != null) {
@@ -673,8 +717,7 @@ class SoccerBallImpl(
         val itemSlot = player.inventory.heldItemSlot
         return triggerTypes.firstNotNullOfOrNull { type ->
             meta.interactions.firstOrNull { e ->
-                e.triggerType == type && itemSlot >= e.conditionHotBarRangeStart && itemSlot <= e.conditionHotBarRangeEnd
-                        && ((grabbingPlayer != player && !e.conditionGrabbedBySelf) || (grabbingPlayer == player && e.conditionGrabbedBySelf))
+                e.triggerType == type && itemSlot >= e.conditionHotBarRangeStart && itemSlot <= e.conditionHotBarRangeEnd && ((grabbingPlayer != player && !e.conditionGrabbedBySelf) || (grabbingPlayer == player && e.conditionGrabbedBySelf))
             }
         }
     }

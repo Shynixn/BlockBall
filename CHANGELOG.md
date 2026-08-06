@@ -1,6 +1,16 @@
 # Changelog
 
-## Release 7.42.0
+## Release 7.44.0
+
+### Changes
+
+* #757 Added a new property to the ball file called `dribblingWhileGrabbedEnabled`, which plays a dribble animation while a player is moving while grabbing a ball if enabled. This allows to setup games similar to BasketBall. 
+* #757 Improved display of the ball in inventory while grabbing a ball.
+* #757 This is a preparation update to eventually release the plugin MCBasketBall.
+
+---
+
+## Release 7.43.0
 
 ### Changes
 
