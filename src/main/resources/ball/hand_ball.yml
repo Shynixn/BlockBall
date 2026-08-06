@@ -25,6 +25,8 @@ render:
   visualVerticalOffset: -1.0
   # Render radius where the ball is visible to players. Beyond this distance, the ball will not be rendered.
   renderDistance: 60
+  # Enables or disables a dribbling animation when a player is moving while grabbing a ball
+  dribblingWhileGrabbedEnabled: false
   # Legacy fallback: Determines if the physics-simulation Slime entity should be rendered visible.
   slimeVisible: false
 # Physical and kinematic properties governing gravity, friction, drag, and collision bounds.
