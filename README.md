@@ -6,7 +6,6 @@
 | master        | [![Build Status](https://github.com/Shynixn/BlockBall/actions/workflows/main.yml/badge.svg?branch=master)](https://github.com/Shynixn/BlockBall/actions)      | [Download latest release](https://github.com/Shynixn/BlockBall/releases) |
 | development        | [![Build Status](https://github.com/Shynixn/BlockBall/actions/workflows/main.yml/badge.svg?branch=development)](https://github.com/Shynixn/BlockBall/actions) |                                                                          |
 
-
 ## Description
 
 BlockBall is a spigot plugin to play soccer games in Minecraft.
