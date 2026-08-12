@@ -1,5 +1,13 @@
 # Changelog
 
+## Release 7.44.1
+
+### Bugs/Issues
+
+* #760 Fixed ball glitches in Minecraft version 1.8.8 - 1.13.0
+
+---
+
 ## Release 7.44.0
 
 ### Changes
