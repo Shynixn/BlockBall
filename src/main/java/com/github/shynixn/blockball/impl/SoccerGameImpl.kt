@@ -327,6 +327,8 @@ abstract class SoccerGameImpl(
             return LeaveResult.EVENT_CANCELLED
         }
 
+        ball?.clearPlayerData(player)
+
         val playerData = ingamePlayersStorage[player]!!
         restoreFromTemporaryPlayerData(player, playerData)
 
@@ -466,7 +468,10 @@ abstract class SoccerGameImpl(
                         }
                     }
                 } catch (e: Exception) {
-                    plugin.log.error("Failed to publish structured game records to the cloud stats server network for Arena: '${arena.name}'.", e)
+                    plugin.log.error(
+                        "Failed to publish structured game records to the cloud stats server network for Arena: '${arena.name}'.",
+                        e
+                    )
                 }
             }
         }
@@ -1105,7 +1110,7 @@ abstract class SoccerGameImpl(
         }
     }
 
-    private fun restoreFromTemporaryPlayerData(player: Player, stats : GameStorage) {
+    private fun restoreFromTemporaryPlayerData(player: Player, stats: GameStorage) {
         plugin.log.debug("[BlockBall] Scheduling baseline profile data restoration task for '${player.name}' in Arena: '${arena.name}'.")
         coroutineHandler.execute(coroutineHandler.fetchEntityDispatcher(player)) {
             plugin.log.debug("[BlockBall] Processing raw structural rollbacks (XP, GameMode, Status) for player '${player.name}' returning from Arena: '${arena.name}'.")

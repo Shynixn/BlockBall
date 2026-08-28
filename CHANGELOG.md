@@ -1,5 +1,13 @@
 # Changelog
 
+## Release 7.44.2
+
+### Bugs/Issues
+
+* #765 Fixed ball is not correctly dereferenced when a player leaves the game while grabbing it.
+
+---
+
 ## Release 7.44.1
 
 ### Bugs/Issues

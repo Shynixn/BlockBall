@@ -93,6 +93,11 @@ interface SoccerBall {
     fun applyInteraction(player: Player, ballInputActionType: BallInputActionType)
 
     /**
+     * Checks if there is a player data stored for the given player and removes all cached references of it.
+     */
+    fun clearPlayerData(player: Player)
+
+    /**
      * Removes the ball.
      */
     fun remove()

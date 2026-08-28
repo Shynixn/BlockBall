@@ -257,6 +257,24 @@ class SoccerBallImpl(
     }
 
     /**
+     * Checks if there is a player data stored for the given player and removes all cached references of it.
+     */
+    override fun clearPlayerData(player: Player) {
+        if (player == grabbingPlayer) {
+            cancelGrab()
+            grabbingPlayer = null
+        }
+
+        if (player == lockedPlayer) {
+            lockedPlayer = null
+        }
+
+        if (player == pendingModificationPlayer) {
+            pendingModificationPlayer = null
+        }
+    }
+
+    /**
      * Destroys virtual entity registrations and clears them from all active client-side view contexts.
      */
     override fun remove() {
