@@ -2001,7 +2001,7 @@ Move to where the referee should wait during lobby phase:
 </tbody>
 </table>
 <p><strong>Examples:</strong>
-<div class="highlight"><pre><span></span><code><span class="c1"># Place ball at referee&#39;s feet</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Place ball at referee's feet</span>
 /blockball<span class="w"> </span>referee<span class="w"> </span>setball
 
 <span class="c1"># Position ball 5 blocks forward, 2 blocks right</span>
@@ -2033,9 +2033,9 @@ Move to where the referee should wait during lobby phase:
 <p><strong>File</strong>: <code>/plugins/BlockBall/scoreboard/blockball_scoreboard.yml</code></p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Add to scoreboard lines</span>
 <span class="nt">lines</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Cards:</span><span class="nv"> </span><span class="s">%blockball_player_cardDisplay%&quot;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"Cards:</span><span class="nv"> </span><span class="s">%blockball_player_cardDisplay%"</span>
 <span class="w">  </span><span class="c1"># Or show individual counts</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;%blockball_player_redCards%</span><span class="nv"> </span><span class="s">Red,</span><span class="nv"> </span><span class="s">%blockball_player_yellowCards%</span><span class="nv"> </span><span class="s">Yellow&quot;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"%blockball_player_redCards%</span><span class="nv"> </span><span class="s">Red,</span><span class="nv"> </span><span class="s">%blockball_player_yellowCards%</span><span class="nv"> </span><span class="s">Yellow"</span>
 </code></pre></div>
 <p><strong>Visual Examples:</strong>
 - <code>🟨🟨🟥</code> - Two yellow cards, one red card
@@ -2054,18 +2054,18 @@ Move to where the referee should wait during lobby phase:
 <h4 id="example-configuration">Example Configuration</h4>
 <div class="highlight"><pre><span></span><code><span class="c1"># In your command items plugin config</span>
 <span class="nt">referee_whistle</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">item</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;TRIPWIRE_HOOK&quot;</span>
-<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&amp;6Referee</span><span class="nv"> </span><span class="s">Whistle&quot;</span>
+<span class="w">  </span><span class="nt">item</span><span class="p">:</span><span class="w"> </span><span class="s">"TRIPWIRE_HOOK"</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">"&amp;6Referee</span><span class="nv"> </span><span class="s">Whistle"</span>
 <span class="w">  </span><span class="nt">commands</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;/playsound</span><span class="nv"> </span><span class="s">entity.player.levelup</span><span class="nv"> </span><span class="s">master</span><span class="nv"> </span><span class="s">@a</span><span class="nv"> </span><span class="s">~</span><span class="nv"> </span><span class="s">~</span><span class="nv"> </span><span class="s">~</span><span class="nv"> </span><span class="s">1.0</span><span class="nv"> </span><span class="s">2.0&quot;</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;/blockball</span><span class="nv"> </span><span class="s">referee</span><span class="nv"> </span><span class="s">whistleresume&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"/playsound</span><span class="nv"> </span><span class="s">entity.player.levelup</span><span class="nv"> </span><span class="s">master</span><span class="nv"> </span><span class="s">@a</span><span class="nv"> </span><span class="s">~</span><span class="nv"> </span><span class="s">~</span><span class="nv"> </span><span class="s">~</span><span class="nv"> </span><span class="s">1.0</span><span class="nv"> </span><span class="s">2.0"</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"/blockball</span><span class="nv"> </span><span class="s">referee</span><span class="nv"> </span><span class="s">whistleresume"</span>
 
 <span class="nt">referee_stop</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">item</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;BARRIER&quot;</span><span class="w">  </span>
-<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&amp;cStop</span><span class="nv"> </span><span class="s">Play&quot;</span>
+<span class="w">  </span><span class="nt">item</span><span class="p">:</span><span class="w"> </span><span class="s">"BARRIER"</span><span class="w">  </span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">"&amp;cStop</span><span class="nv"> </span><span class="s">Play"</span>
 <span class="w">  </span><span class="nt">commands</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;/playsound</span><span class="nv"> </span><span class="s">block.note_block.bass</span><span class="nv"> </span><span class="s">master</span><span class="nv"> </span><span class="s">@a</span><span class="nv"> </span><span class="s">~</span><span class="nv"> </span><span class="s">~</span><span class="nv"> </span><span class="s">~</span><span class="nv"> </span><span class="s">1.0</span><span class="nv"> </span><span class="s">0.5&quot;</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;/blockball</span><span class="nv"> </span><span class="s">referee</span><span class="nv"> </span><span class="s">whistlestop&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"/playsound</span><span class="nv"> </span><span class="s">block.note_block.bass</span><span class="nv"> </span><span class="s">master</span><span class="nv"> </span><span class="s">@a</span><span class="nv"> </span><span class="s">~</span><span class="nv"> </span><span class="s">~</span><span class="nv"> </span><span class="s">~</span><span class="nv"> </span><span class="s">1.0</span><span class="nv"> </span><span class="s">0.5"</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"/blockball</span><span class="nv"> </span><span class="s">referee</span><span class="nv"> </span><span class="s">whistlestop"</span>
 </code></pre></div>
 <h4 id="apply-to-referee-inventory">Apply to Referee Inventory</h4>
 <div class="highlight"><pre><span></span><code><span class="c1"># Give yourself the items, then save as referee inventory</span>
@@ -2076,27 +2076,27 @@ Move to where the referee should wait during lobby phase:
 <div class="highlight"><pre><span></span><code><span class="c1"># Add to arena configuration</span>
 <span class="nt">refereeCommands</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">goalScored</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;SERVER_PER_PLAYER&#39;</span>
-<span class="w">      </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;/playsound</span><span class="nv"> </span><span class="s">entity.firework_rocket.blast</span><span class="nv"> </span><span class="s">master</span><span class="nv"> </span><span class="s">@a&#39;</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;SERVER_PER_PLAYER&#39;</span><span class="w">  </span>
-<span class="w">      </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;/broadcast</span><span class="nv"> </span><span class="s">&amp;6GOAL!</span><span class="nv"> </span><span class="s">&amp;f%blockball_player_name%</span><span class="nv"> </span><span class="s">scores</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">%blockball_player_teamDisplayName%!&#39;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">'SERVER_PER_PLAYER'</span>
+<span class="w">      </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="s">'/playsound</span><span class="nv"> </span><span class="s">entity.firework_rocket.blast</span><span class="nv"> </span><span class="s">master</span><span class="nv"> </span><span class="s">@a'</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">'SERVER_PER_PLAYER'</span><span class="w">  </span>
+<span class="w">      </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="s">'/broadcast</span><span class="nv"> </span><span class="s">&amp;6GOAL!</span><span class="nv"> </span><span class="s">&amp;f%blockball_player_name%</span><span class="nv"> </span><span class="s">scores</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">%blockball_player_teamDisplayName%!'</span>
 
 <span class="w">  </span><span class="nt">cardIssued</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;SERVER_PER_PLAYER&#39;</span>
-<span class="w">      </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;/playsound</span><span class="nv"> </span><span class="s">block.anvil.land</span><span class="nv"> </span><span class="s">master</span><span class="nv"> </span><span class="s">@a&#39;</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;SERVER_PER_PLAYER&#39;</span>
-<span class="w">      </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;/broadcast</span><span class="nv"> </span><span class="s">&amp;e%blockball_player_name%</span><span class="nv"> </span><span class="s">receives</span><span class="nv"> </span><span class="s">a</span><span class="nv"> </span><span class="s">card</span><span class="nv"> </span><span class="s">from</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">referee!&#39;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">'SERVER_PER_PLAYER'</span>
+<span class="w">      </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="s">'/playsound</span><span class="nv"> </span><span class="s">block.anvil.land</span><span class="nv"> </span><span class="s">master</span><span class="nv"> </span><span class="s">@a'</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">'SERVER_PER_PLAYER'</span>
+<span class="w">      </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="s">'/broadcast</span><span class="nv"> </span><span class="s">&amp;e%blockball_player_name%</span><span class="nv"> </span><span class="s">receives</span><span class="nv"> </span><span class="s">a</span><span class="nv"> </span><span class="s">card</span><span class="nv"> </span><span class="s">from</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">referee!'</span>
 </code></pre></div>
 <hr />
 <h2 id="professional-tournament-setup">🏆 Professional Tournament Setup</h2>
 <h3 id="complete-referee-arena-configuration">Complete Referee Arena Configuration</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Advanced referee arena example</span>
 <span class="nt">arena</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;tournament_final&quot;</span>
-<span class="w">  </span><span class="nt">displayName</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&amp;6&amp;lTournament</span><span class="nv"> </span><span class="s">Final&quot;</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">"tournament_final"</span>
+<span class="w">  </span><span class="nt">displayName</span><span class="p">:</span><span class="w"> </span><span class="s">"&amp;6&amp;lTournament</span><span class="nv"> </span><span class="s">Final"</span>
 
 <span class="nt">game</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;REFEREEGAME&quot;</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">"REFEREEGAME"</span>
 <span class="w">  </span><span class="nt">maxScore</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
 <span class="w">  </span><span class="nt">periods</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">duration</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2700</span><span class="w">  </span><span class="c1"># 45 minutes first half</span>
@@ -2106,27 +2106,27 @@ Move to where the referee should wait during lobby phase:
 
 <span class="nt">teams</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">red</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">displayName</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&amp;c&amp;lTeam</span><span class="nv"> </span><span class="s">Alpha&quot;</span>
+<span class="w">    </span><span class="nt">displayName</span><span class="p">:</span><span class="w"> </span><span class="s">"&amp;c&amp;lTeam</span><span class="nv"> </span><span class="s">Alpha"</span>
 <span class="w">    </span><span class="nt">maxPlayers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">11</span>
 <span class="w">  </span><span class="nt">blue</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">displayName</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&amp;9&amp;lTeam</span><span class="nv"> </span><span class="s">Beta&quot;</span><span class="w">  </span>
+<span class="w">    </span><span class="nt">displayName</span><span class="p">:</span><span class="w"> </span><span class="s">"&amp;9&amp;lTeam</span><span class="nv"> </span><span class="s">Beta"</span><span class="w">  </span>
 <span class="w">    </span><span class="nt">maxPlayers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">11</span>
 <span class="w">  </span><span class="nt">referee</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">displayName</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&amp;7&amp;lMatch</span><span class="nv"> </span><span class="s">Officials&quot;</span>
+<span class="w">    </span><span class="nt">displayName</span><span class="p">:</span><span class="w"> </span><span class="s">"&amp;7&amp;lMatch</span><span class="nv"> </span><span class="s">Officials"</span>
 
 <span class="c1"># Professional match commands</span>
 <span class="nt">joinCommands</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;SERVER_PER_PLAYER&#39;</span>
-<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;/gamemode</span><span class="nv"> </span><span class="s">spectator</span><span class="nv"> </span><span class="s">%blockball_player_name%&#39;</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;SERVER_PER_PLAYER&#39;</span>
-<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;/effect</span><span class="nv"> </span><span class="s">give</span><span class="nv"> </span><span class="s">%blockball_player_name%</span><span class="nv"> </span><span class="s">night_vision</span><span class="nv"> </span><span class="s">999999</span><span class="nv"> </span><span class="s">0&#39;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">'SERVER_PER_PLAYER'</span>
+<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="s">'/gamemode</span><span class="nv"> </span><span class="s">spectator</span><span class="nv"> </span><span class="s">%blockball_player_name%'</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">'SERVER_PER_PLAYER'</span>
+<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="s">'/effect</span><span class="nv"> </span><span class="s">give</span><span class="nv"> </span><span class="s">%blockball_player_name%</span><span class="nv"> </span><span class="s">night_vision</span><span class="nv"> </span><span class="s">999999</span><span class="nv"> </span><span class="s">0'</span>
 
 <span class="c1"># Reset players after match  </span>
 <span class="nt">leaveCommands</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;SERVER_PER_PLAYER&#39;</span>
-<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;/gamemode</span><span class="nv"> </span><span class="s">survival</span><span class="nv"> </span><span class="s">%blockball_player_name%&#39;</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;SERVER_PER_PLAYER&#39;</span>
-<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;/effect</span><span class="nv"> </span><span class="s">clear</span><span class="nv"> </span><span class="s">%blockball_player_name%&#39;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">'SERVER_PER_PLAYER'</span>
+<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="s">'/gamemode</span><span class="nv"> </span><span class="s">survival</span><span class="nv"> </span><span class="s">%blockball_player_name%'</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">'SERVER_PER_PLAYER'</span>
+<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="s">'/effect</span><span class="nv"> </span><span class="s">clear</span><span class="nv"> </span><span class="s">%blockball_player_name%'</span>
 </code></pre></div>
 <h3 id="match-day-workflow">Match Day Workflow</h3>
 <ol>

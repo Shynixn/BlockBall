@@ -2192,32 +2192,32 @@
 <h3 id="scoreboard-integration">Scoreboard Integration</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># In your scoreboard plugin configuration</span>
 <span class="nt">lines</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;&amp;6===</span><span class="nv"> </span><span class="s">&amp;lBlockBall</span><span class="nv"> </span><span class="s">&amp;6===&quot;</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;&amp;cRed:</span><span class="nv"> </span><span class="s">&amp;f%blockball_game_redScore%</span><span class="nv"> </span><span class="s">&amp;7|</span><span class="nv"> </span><span class="s">&amp;9Blue:</span><span class="nv"> </span><span class="s">&amp;f%blockball_game_blueScore%&quot;</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;&amp;7Time:</span><span class="nv"> </span><span class="s">&amp;f%blockball_game_time%&quot;</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;&amp;7Players:</span><span class="nv"> </span><span class="s">&amp;f%blockball_game_players%/%blockball_game_maxPlayers%&quot;</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;&quot;</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;&amp;7Last</span><span class="nv"> </span><span class="s">Hit:</span><span class="nv"> </span><span class="s">&amp;f%blockball_game_lastHitPlayerName%&quot;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"&amp;6===</span><span class="nv"> </span><span class="s">&amp;lBlockBall</span><span class="nv"> </span><span class="s">&amp;6==="</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"&amp;cRed:</span><span class="nv"> </span><span class="s">&amp;f%blockball_game_redScore%</span><span class="nv"> </span><span class="s">&amp;7|</span><span class="nv"> </span><span class="s">&amp;9Blue:</span><span class="nv"> </span><span class="s">&amp;f%blockball_game_blueScore%"</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"&amp;7Time:</span><span class="nv"> </span><span class="s">&amp;f%blockball_game_time%"</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"&amp;7Players:</span><span class="nv"> </span><span class="s">&amp;f%blockball_game_players%/%blockball_game_maxPlayers%"</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">""</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"&amp;7Last</span><span class="nv"> </span><span class="s">Hit:</span><span class="nv"> </span><span class="s">&amp;f%blockball_game_lastHitPlayerName%"</span>
 </code></pre></div>
 <h3 id="chat-announcements">Chat Announcements</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Goal scored message</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;%blockball_player_name%</span><span class="nv"> </span><span class="s">&amp;ahas</span><span class="nv"> </span><span class="s">scored</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">%blockball_player_teamDisplayName%!&quot;</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;&amp;7Score:</span><span class="nv"> </span><span class="s">&amp;c%blockball_game_redScore%</span><span class="nv"> </span><span class="s">&amp;7-</span><span class="nv"> </span><span class="s">&amp;9%blockball_game_blueScore%&quot;</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"%blockball_player_name%</span><span class="nv"> </span><span class="s">&amp;ahas</span><span class="nv"> </span><span class="s">scored</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">%blockball_player_teamDisplayName%!"</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"&amp;7Score:</span><span class="nv"> </span><span class="s">&amp;c%blockball_game_redScore%</span><span class="nv"> </span><span class="s">&amp;7-</span><span class="nv"> </span><span class="s">&amp;9%blockball_game_blueScore%"</span>
 </code></pre></div>
 <h3 id="sign-display">Sign Display</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Join sign format</span>
 <span class="nt">lines</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;&amp;6[BlockBall]&quot;</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;%blockball_game_displayName%&quot;</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;&amp;7Players:</span><span class="nv"> </span><span class="s">%blockball_game_players%/%blockball_game_maxPlayers%&quot;</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;%blockball_game_stateDisplayName%&quot;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"&amp;6[BlockBall]"</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"%blockball_game_displayName%"</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"&amp;7Players:</span><span class="nv"> </span><span class="s">%blockball_game_players%/%blockball_game_maxPlayers%"</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"%blockball_game_stateDisplayName%"</span>
 </code></pre></div>
 <h3 id="statistics-display">Statistics Display</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Player stats (Patreon)</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;&amp;6Your</span><span class="nv"> </span><span class="s">Stats:&quot;</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;&amp;7Goals:</span><span class="nv"> </span><span class="s">&amp;f%blockball_player_goals%&quot;</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;&amp;7Win</span><span class="nv"> </span><span class="s">Rate:</span><span class="nv"> </span><span class="s">&amp;f%blockball_player_winrate%%&quot;</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;&amp;7Games:</span><span class="nv"> </span><span class="s">&amp;f%blockball_player_games%&quot;</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"&amp;6Your</span><span class="nv"> </span><span class="s">Stats:"</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"&amp;7Goals:</span><span class="nv"> </span><span class="s">&amp;f%blockball_player_goals%"</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"&amp;7Win</span><span class="nv"> </span><span class="s">Rate:</span><span class="nv"> </span><span class="s">&amp;f%blockball_player_winrate%%"</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"&amp;7Games:</span><span class="nv"> </span><span class="s">&amp;f%blockball_player_games%"</span>
 </code></pre></div>
 <hr />
 <h2 id="testing-placeholders">🔍 Testing Placeholders</h2>

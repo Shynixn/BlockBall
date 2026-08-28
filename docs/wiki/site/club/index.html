@@ -1494,69 +1494,69 @@
 <hr />
 <h2 id="club-template-reference-blockball_clubyml">📋 Club Template Reference (<code>blockball_club.yml</code>)</h2>
 <p>The <code>blockball_club</code> template ships with BlockBall and defines the role hierarchy and permissions for every club created from it.</p>
-<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;blockball_club&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">"blockball_club"</span>
 <span class="nt">maxPlayers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span>
-<span class="nt">defaultRole</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;player&quot;</span>
+<span class="nt">defaultRole</span><span class="p">:</span><span class="w"> </span><span class="s">"player"</span>
 <span class="nt">roles</span><span class="p">:</span>
 <span class="w">  </span><span class="c1"># The club owner has full control over the guild</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;owner&quot;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">"owner"</span>
 <span class="w">    </span><span class="nt">allowPermissions</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;blockball.shyguild.guild.%blockball_guild_name%.delete&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;blockball.shyguild.guild.%blockball_guild_name%.role.add.owner&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;blockball.shyguild.guild.%blockball_guild_name%.role.remove.owner&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;blockball.shyguild.guild.%blockball_guild_name%.role.add.coach&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;blockball.shyguild.guild.%blockball_guild_name%.role.remove.coach&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;blockball.shyguild.guild.%blockball_guild_name%.role.add.captain&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;blockball.shyguild.guild.%blockball_guild_name%.role.remove.captain&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;blockball.shyguild.guild.%blockball_guild_name%.role.add.player&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;blockball.shyguild.guild.%blockball_guild_name%.role.remove.player&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;blockball.shyguild.guild.%blockball_guild_name%.role.list&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;blockball.shyguild.guild.%blockball_guild_name%.member.remove&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;blockball.shyguild.guild.%blockball_guild_name%.member.list&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;blockball.shyguild.guild.%blockball_guild_name%.member.invite&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;blockball.shyguild.guild.%blockball_guild_name%.member.leave&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"blockball.shyguild.guild.%blockball_guild_name%.delete"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"blockball.shyguild.guild.%blockball_guild_name%.role.add.owner"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"blockball.shyguild.guild.%blockball_guild_name%.role.remove.owner"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"blockball.shyguild.guild.%blockball_guild_name%.role.add.coach"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"blockball.shyguild.guild.%blockball_guild_name%.role.remove.coach"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"blockball.shyguild.guild.%blockball_guild_name%.role.add.captain"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"blockball.shyguild.guild.%blockball_guild_name%.role.remove.captain"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"blockball.shyguild.guild.%blockball_guild_name%.role.add.player"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"blockball.shyguild.guild.%blockball_guild_name%.role.remove.player"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"blockball.shyguild.guild.%blockball_guild_name%.role.list"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"blockball.shyguild.guild.%blockball_guild_name%.member.remove"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"blockball.shyguild.guild.%blockball_guild_name%.member.list"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"blockball.shyguild.guild.%blockball_guild_name%.member.invite"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"blockball.shyguild.guild.%blockball_guild_name%.member.leave"</span>
 <span class="w">      </span><span class="c1"># Club arena access — add one entry per club arena</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;blockball.club.join.&lt;arena&gt;&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;blockball.club.start.&lt;arena&gt;&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"blockball.club.join.&lt;arena&gt;"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"blockball.club.start.&lt;arena&gt;"</span>
 <span class="w">    </span><span class="nt">denyPermissions</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
 
 <span class="w">  </span><span class="c1"># Coaches can manage captains and players, but cannot delete the club or assign owners</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;coach&quot;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">"coach"</span>
 <span class="w">    </span><span class="nt">allowPermissions</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;blockball.shyguild.guild.%blockball_guild_name%.role.add.captain&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;blockball.shyguild.guild.%blockball_guild_name%.role.remove.captain&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;blockball.shyguild.guild.%blockball_guild_name%.role.add.player&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;blockball.shyguild.guild.%blockball_guild_name%.role.remove.player&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;blockball.shyguild.guild.%blockball_guild_name%.role.list&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;blockball.shyguild.guild.%blockball_guild_name%.member.remove&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;blockball.shyguild.guild.%blockball_guild_name%.member.list&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;blockball.shyguild.guild.%blockball_guild_name%.member.invite&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;blockball.shyguild.guild.%blockball_guild_name%.member.leave&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"blockball.shyguild.guild.%blockball_guild_name%.role.add.captain"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"blockball.shyguild.guild.%blockball_guild_name%.role.remove.captain"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"blockball.shyguild.guild.%blockball_guild_name%.role.add.player"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"blockball.shyguild.guild.%blockball_guild_name%.role.remove.player"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"blockball.shyguild.guild.%blockball_guild_name%.role.list"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"blockball.shyguild.guild.%blockball_guild_name%.member.remove"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"blockball.shyguild.guild.%blockball_guild_name%.member.list"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"blockball.shyguild.guild.%blockball_guild_name%.member.invite"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"blockball.shyguild.guild.%blockball_guild_name%.member.leave"</span>
 <span class="w">      </span><span class="c1"># Club arena access — add one entry per club arena</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;blockball.club.join.&lt;arena&gt;&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;blockball.club.start.&lt;arena&gt;&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"blockball.club.join.&lt;arena&gt;"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"blockball.club.start.&lt;arena&gt;"</span>
 <span class="w">    </span><span class="nt">denyPermissions</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
 
 <span class="w">  </span><span class="c1"># Captains can invite new players and view the roster, but cannot manage roles</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;captain&quot;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">"captain"</span>
 <span class="w">    </span><span class="nt">allowPermissions</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;blockball.shyguild.guild.%blockball_guild_name%.role.list&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;blockball.shyguild.guild.%blockball_guild_name%.member.list&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;blockball.shyguild.guild.%blockball_guild_name%.member.invite&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;blockball.shyguild.guild.%blockball_guild_name%.member.leave&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"blockball.shyguild.guild.%blockball_guild_name%.role.list"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"blockball.shyguild.guild.%blockball_guild_name%.member.list"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"blockball.shyguild.guild.%blockball_guild_name%.member.invite"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"blockball.shyguild.guild.%blockball_guild_name%.member.leave"</span>
 <span class="w">      </span><span class="c1"># Club arena access — add one entry per club arena</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;blockball.club.join.&lt;arena&gt;&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;blockball.club.start.&lt;arena&gt;&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"blockball.club.join.&lt;arena&gt;"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"blockball.club.start.&lt;arena&gt;"</span>
 <span class="w">    </span><span class="nt">denyPermissions</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
 
 <span class="w">  </span><span class="c1"># Regular players can only view the roster and leave</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;player&quot;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">"player"</span>
 <span class="w">    </span><span class="nt">allowPermissions</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;blockball.shyguild.guild.%blockball_guild_name%.role.list&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;blockball.shyguild.guild.%blockball_guild_name%.member.list&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;blockball.shyguild.guild.%blockball_guild_name%.member.leave&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"blockball.shyguild.guild.%blockball_guild_name%.role.list"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"blockball.shyguild.guild.%blockball_guild_name%.member.list"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"blockball.shyguild.guild.%blockball_guild_name%.member.leave"</span>
 <span class="w">      </span><span class="c1"># Club arena access — players can join but cannot start a club game</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;blockball.club.join.&lt;arena&gt;&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"blockball.club.join.&lt;arena&gt;"</span>
 <span class="w">    </span><span class="nt">denyPermissions</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
 </code></pre></div>
 <p>The <code>%blockball_guild_name%</code> placeholder is automatically replaced with the actual club name when permissions are applied via LuckPerms.</p>

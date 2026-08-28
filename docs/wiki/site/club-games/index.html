@@ -1059,43 +1059,43 @@ club-arena →  club only    (blockball.club.join.club-arena)
 <li><strong>All roles</strong> (<code>owner</code>, <code>coach</code>, <code>captain</code>, <code>player</code>) need <code>blockball.club.join.&lt;arena&gt;</code> so every club member can join.</li>
 <li><strong>Trusted roles</strong> (<code>owner</code>, <code>coach</code>, <code>captain</code>) additionally need <code>blockball.club.start.&lt;arena&gt;</code> so they can open a game session.</li>
 </ul>
-<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;blockball_club&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">"blockball_club"</span>
 <span class="nt">maxPlayers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span>
-<span class="nt">defaultRole</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;player&quot;</span>
+<span class="nt">defaultRole</span><span class="p">:</span><span class="w"> </span><span class="s">"player"</span>
 <span class="nt">roles</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;owner&quot;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">"owner"</span>
 <span class="w">    </span><span class="nt">allowPermissions</span><span class="p">:</span>
 <span class="w">      </span><span class="c1"># ... club management permissions ...</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;blockball.club.join.club-arena&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;blockball.club.start.club-arena&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"blockball.club.join.club-arena"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"blockball.club.start.club-arena"</span>
 <span class="w">    </span><span class="nt">denyPermissions</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
 
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;coach&quot;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">"coach"</span>
 <span class="w">    </span><span class="nt">allowPermissions</span><span class="p">:</span>
 <span class="w">      </span><span class="c1"># ... club management permissions ...</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;blockball.club.join.club-arena&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;blockball.club.start.club-arena&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"blockball.club.join.club-arena"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"blockball.club.start.club-arena"</span>
 <span class="w">    </span><span class="nt">denyPermissions</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
 
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;captain&quot;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">"captain"</span>
 <span class="w">    </span><span class="nt">allowPermissions</span><span class="p">:</span>
 <span class="w">      </span><span class="c1"># ... club management permissions ...</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;blockball.club.join.club-arena&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;blockball.club.start.club-arena&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"blockball.club.join.club-arena"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"blockball.club.start.club-arena"</span>
 <span class="w">    </span><span class="nt">denyPermissions</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
 
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;player&quot;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">"player"</span>
 <span class="w">    </span><span class="nt">allowPermissions</span><span class="p">:</span>
 <span class="w">      </span><span class="c1"># ... club management permissions ...</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;blockball.club.join.club-arena&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"blockball.club.join.club-arena"</span>
 <span class="w">      </span><span class="c1"># no blockball.club.start — regular players cannot open a game session</span>
 <span class="w">    </span><span class="nt">denyPermissions</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
 </code></pre></div>
 <p>For <strong>multiple club arenas</strong>, add one line per arena to each role:</p>
-<div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;blockball.club.join.club-arena&quot;</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;blockball.club.join.club-arena-2&quot;</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;blockball.club.start.club-arena&quot;</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;blockball.club.start.club-arena-2&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"blockball.club.join.club-arena"</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"blockball.club.join.club-arena-2"</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"blockball.club.start.club-arena"</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"blockball.club.start.club-arena-2"</span>
 </code></pre></div>
 <p>After editing the file, reload with:</p>
 <div class="highlight"><pre><span></span><code>/blockballclub<span class="w"> </span>reload
