@@ -82,7 +82,7 @@ The enhanced Bedrock experience includes:
 * Optimized Performance: Better frame rates on mobile devices
 * Easy Installation: Pre-configured resource packs
 
-### Installation (Patreon Members)
+### Installation (Patreon Members) - (Updated September 2026)
 
 !!! tip "Time Saver"
     Patreon members get pre-configured files that make setup effortless. [Support development](https://www.patreon.com/Shynixn) to save hours of manual configuration!
@@ -95,16 +95,10 @@ The enhanced Bedrock experience includes:
     2. **Extract Files**
        ```
        plugins/Geyser-Spigot/
-       ├── custom-skulls_blockball.yml
-       └── packs/
-           └── BlockBallPack.mcpack
+       └── custom_mappings/
+           └── blockball-mapping.json
        ```
-    
-    3. **Configure Custom Skulls**
-       - Copy `player-profiles` values from `custom-skulls_blockball.yml`
-       - Paste into `plugins/Geyser-Spigot/custom-skulls.yml`
-    
-    4. **Restart Server**
+    3. **Restart Server**
        - Restart to apply resource pack changes
 
 === "Proxy Installation (BungeeCord/Velocity)"
@@ -115,16 +109,11 @@ The enhanced Bedrock experience includes:
     2. **Extract to Proxy**
        ```
        plugins/Geyser-<Proxy>/
-       ├── custom-skulls_blockball.yml  
-       └── packs/
-           └── BlockBallPack.mcpack
+       ├── custom_mappings/
+       │   └── blockball-mapping.json
        ```
     
-    3. **Update Configuration**
-       - Merge `player-profiles` from `custom-skulls_blockball.yml` 
-       - Into `plugins/Geyser-<Proxy>/custom-skulls.yml`
-    
-    4. **Apply Changes**
+    3. **Apply Changes**
        - Restart proxy server
 
 

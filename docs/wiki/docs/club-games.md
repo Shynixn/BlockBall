@@ -17,13 +17,19 @@ By default, BlockBall arenas are open to all players via `blockball.join.*`. The
 
 ## Joining a Club Game
 
-To enter a club arena, use the club join command instead of the regular join:
+To start a club arena, use the club join command instead of the regular join:
 
 ```bash
-/blockball club join <arena>
+/blockball club join <arena> <club>
 ```
 
 **Starting a club game** requires `blockball.club.start.<arena>`. The first club member with that permission who joins opens the game session. After that, all other club members who have `blockball.club.join.<arena>` can join normally with the same command — no start permission needed for them.
+
+If you want to join as a referee in a club game, simply use `referee` instead of the name of the club.
+
+```bash
+/blockball club join <arena> referee
+```
 
 ---
 
