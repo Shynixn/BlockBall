@@ -42,7 +42,7 @@ import kotlin.math.min
 
 class BlockBallCommandExecutor(
     private val arenaRepository: CacheRepository<SoccerArena>,
-    private val ballRepository : CacheRepository<SoccerBallMeta>,
+    private val ballRepository: CacheRepository<SoccerBallMeta>,
     private val gameService: GameService,
     private val plugin: Plugin,
     private val commandService: CommandService,
@@ -174,30 +174,6 @@ class BlockBallCommandExecutor(
             guildService.getGuildCache().map { e -> e.name }
         }
     }
-
-    private val clubValidator = object : Validator<Guild> {
-        override suspend fun transform(
-            sender: CommandSender, prevArgs: List<Any>, openArgs: List<String>
-        ): Guild? {
-            return try {
-                if (sender is Player) {
-                    guildService.getGuildCache()
-                        .firstOrNull { e -> e.isMember(sender) && e.name.equals(openArgs[0], ignoreCase = true) }
-                } else {
-                    guildService.getGuildCache().firstOrNull { e -> e.name.equals(openArgs[0], ignoreCase = true) }
-                }
-            } catch (e: Exception) {
-                return null
-            }
-        }
-
-        override suspend fun message(sender: CommandSender, prevArgs: List<Any>, openArgs: List<String>): String {
-            return placeHolderService.resolvePlaceHolder(
-                language.shyGuildGuildNotFoundMessage.text, null, mapOf("0" to openArgs[0])
-            )
-        }
-    }
-
 
     private val teamValidator = object : Validator<Team> {
         override suspend fun transform(
@@ -472,14 +448,14 @@ class BlockBallCommandExecutor(
                     noPermission()
                     toolTip { language.commandClubJoinToolTip.text }
                     builder().argument("name").validator(gameMustExistValidator).tabs(arenaTabs).argument("club")
-                        .validator(clubValidator).tabs(clubTabs)
-                        .executePlayer({ language.commandSenderHasToBePlayer.text }) { sender, arena, club ->
-                            joinGameAsClub(sender, sender, arena.name, club)
+                        .tabs(clubTabs)
+                        .executePlayer({ language.commandSenderHasToBePlayer.text }) { sender, arena, clubName ->
+                            joinGameAsClub(sender, sender, arena.name, clubName)
                         }.argument("player").validator(playerMustExist).tabs(onlinePlayerTabs)
                         .permission { Permission.EDIT_GAME.permission }
                         .permissionMessage { language.noPermissionMessage.text }
-                        .execute { sender, arena, team, player ->
-                            joinGameAsClub(sender, player, arena.name, team)
+                        .execute { sender, arena, clubName, player ->
+                            joinGameAsClub(sender, player, arena.name, clubName)
                         }
                 }
             }
@@ -962,7 +938,7 @@ class BlockBallCommandExecutor(
         sender.sendMessage(footerBuilder.toString())
     }
 
-    private fun joinGameAsClub(sender: CommandSender, player: Player, name: String, club: Guild): Boolean {
+    private fun joinGameAsClub(sender: CommandSender, player: Player, name: String, clubName: String): Boolean {
         if (!BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
             sender.sendLanguageMessage(language.onlyForPatreons)
             return false
@@ -985,7 +961,8 @@ class BlockBallCommandExecutor(
             return false
         }
 
-        if (!game.areClubsPlaying() && game.getPlayers().isNotEmpty()) {
+        if (!game.areClubsPlaying() && game.ingamePlayersStorage.filter { e -> e.value.team != Team.REFEREE }
+                .isNotEmpty()) {
             sender.sendLanguageMessage(language.gameIsInStandardModeMessage, name)
             return false
         }
@@ -1007,6 +984,33 @@ class BlockBallCommandExecutor(
             )
         ) {
             sender.sendLanguageMessage(language.gameNoPermissionToJoinAGameInClubModeMessage, game.arena.name)
+            return false
+        }
+
+        if (clubName == "referee") {
+            if (game !is SoccerRefereeGame) {
+                sender.sendLanguageMessage(language.gameIsNotARefereeGame)
+                return false
+            }
+
+            if (!sender.hasPermission(Permission.REFEREE_JOIN.permission)) {
+                sender.sendLanguageMessage(language.noPermissionForGameMessage, game.arena.name)
+                return false
+            }
+
+            val joinResult = game.join(player, Team.REFEREE)
+            if (joinResult == JoinResult.TEAM_FULL || joinResult == JoinResult.GAME_ALREADY_RUNNING) {
+                sender.sendLanguageMessage(language.gameIsFullMessage)
+                return false
+            }
+
+            player.sendLanguageMessage(language.joinTeamClubMessage, "referee")
+            return true
+        }
+
+        val club = guildService.getGuildCache().firstOrNull { it.name.equals(clubName, ignoreCase = true) }
+        if (club == null) {
+            sender.sendLanguageMessage(language.shyGuildGuildNotFoundMessage, clubName)
             return false
         }
 
@@ -1043,18 +1047,6 @@ class BlockBallCommandExecutor(
         if (club != game.redClub && club != game.blueClub) {
             sender.sendLanguageMessage(language.gameAllClubSlotsAreFilledMessage, game.arena.name)
             return false
-        }
-
-        if (club.name.equals("referee", true)) {
-            if (game !is SoccerRefereeGame) {
-                sender.sendLanguageMessage(language.gameIsNotARefereeGame)
-                return false
-            }
-
-            if (!sender.hasPermission(Permission.REFEREE_JOIN.permission)) {
-                sender.sendLanguageMessage(language.noPermissionForGameMessage, game.arena.name)
-                return false
-            }
         }
 
         val team = if (club == game.redClub) {
@@ -1225,7 +1217,8 @@ class BlockBallCommandExecutor(
         val selectionRight = selectionService.getRightClickLocation(player)
 
         if (selectionType == SelectionType.FIELD || selectionType == SelectionType.RED_GOAL || selectionType == SelectionType.BLUE_GOAL || selectionType == SelectionType.OUTER_FIELD
-            || selectionType == SelectionType.RED_OUT || selectionType == SelectionType.BLUE_OUT) {
+            || selectionType == SelectionType.RED_OUT || selectionType == SelectionType.BLUE_OUT
+        ) {
             if (selectionLeft == null) {
                 player.sendLanguageMessage(language.noLeftClickSelectionMessage)
                 return
