@@ -1031,10 +1031,13 @@
 </tbody>
 </table>
 <h2 id="joining-a-club-game">Joining a Club Game</h2>
-<p>To enter a club arena, use the club join command instead of the regular join:</p>
-<div class="highlight"><pre><span></span><code>/blockball<span class="w"> </span>club<span class="w"> </span>join<span class="w"> </span>&lt;arena&gt;
+<p>To start a club arena, use the club join command instead of the regular join:</p>
+<div class="highlight"><pre><span></span><code>/blockball<span class="w"> </span>club<span class="w"> </span>join<span class="w"> </span>&lt;arena&gt;<span class="w"> </span>&lt;club&gt;
 </code></pre></div>
 <p><strong>Starting a club game</strong> requires <code>blockball.club.start.&lt;arena&gt;</code>. The first club member with that permission who joins opens the game session. After that, all other club members who have <code>blockball.club.join.&lt;arena&gt;</code> can join normally with the same command — no start permission needed for them.</p>
+<p>If you want to join as a referee in a club game, simply use <code>referee</code> instead of the name of the club.</p>
+<div class="highlight"><pre><span></span><code>/blockball<span class="w"> </span>club<span class="w"> </span>join<span class="w"> </span>&lt;arena&gt;<span class="w"> </span>referee
+</code></pre></div>
 <hr />
 <h2 id="setting-up-club-arenas-step-by-step">Setting Up Club Arenas (Step by Step)</h2>
 <h3 id="step-1-decide-on-your-arena-layout">Step 1: Decide on your arena layout</h3>
