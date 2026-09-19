@@ -1,5 +1,13 @@
 # Changelog
 
+## Release 7.45.0
+
+### Changes
+
+* #768 Added support for Minecraft 26.3.x
+
+---
+
 ## Release 7.44.3
 
 ### Changes

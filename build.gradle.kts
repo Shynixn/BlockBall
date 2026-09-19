@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "com.github.shynixn"
-version = "7.44.3"
+version = "7.45.0"
 
 repositories {
     mavenCentral()
@@ -29,13 +29,13 @@ dependencies {
     implementation("com.zaxxer:HikariCP:4.0.3")
 
     // Custom dependencies
-    implementation("com.github.shynixn.shycommandsigns:shycommandsigns:1.6.1")
-    implementation("com.github.shynixn.shybossbar:shybossbar:1.8.1")
-    implementation("com.github.shynixn.shyscoreboard:shyscoreboard:1.14.1")
-    implementation("com.github.shynixn.shyparticles:shyparticles:1.4.1")
-    implementation("com.github.shynixn.shyguild:shyguild:1.2.1")
-    implementation("com.github.shynixn.mcutils:common:2026.16")
-    implementation("com.github.shynixn.mcutils:packet:2026.26")
+    implementation("com.github.shynixn.shycommandsigns:shycommandsigns:1.7.0")
+    implementation("com.github.shynixn.shybossbar:shybossbar:1.9.0")
+    implementation("com.github.shynixn.shyscoreboard:shyscoreboard:1.15.0")
+    implementation("com.github.shynixn.shyparticles:shyparticles:1.5.0")
+    implementation("com.github.shynixn.shyguild:shyguild:1.3.0")
+    implementation("com.github.shynixn.mcutils:common:2026.18")
+    implementation("com.github.shynixn.mcutils:packet:2026.32")
     implementation("com.github.shynixn.mcutils:worldguard:2026.1")
     implementation("com.github.shynixn.mcutils:database:2026.3")
     implementation("com.github.shynixn.mcutils:http:2026.3")
@@ -171,7 +171,8 @@ fun registerPluginJar(
                 "com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_21_R5/**",
                 "com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_21_R6/**",
                 "com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_21_R7/**",
-                "com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v26_1_R1/**"
+                "com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v26_1_R1/**",
+                "com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v26_1_R2/**"
             )
             for (path in oldNmsPaths) exclude(path)
         }
