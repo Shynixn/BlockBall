@@ -1300,6 +1300,13 @@ class BlockBallCommandExecutor(
             plugin.reloadConfig()
             plugin.reloadTranslation(language)
             plugin.log.reload()
+            // MoonXBall patch: also reload the second config file so that
+            // /blockball reload picks up MX_Blocball2.yml changes.
+            try {
+                (plugin as? com.github.shynixn.blockball.BlockBallPlugin)?.let { bp ->
+                    bp.reloadMoonXConfig()
+                }
+            } catch (_: Throwable) { /* non-fatal */ }
             try {
                 arenaRepository.clearCache()
                 gameService.reloadAll()

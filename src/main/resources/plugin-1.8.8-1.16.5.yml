@@ -1,5 +1,56 @@
-name: BlockBall
+name: MoonXBall
 version: 7.45.0
-author: Shynixn
+author: Shynixn, MoonX
 main: com.github.shynixn.blockball.BlockBallPlugin
-softdepend: [ PlaceholderAPI, LuckPerms]
+description: MoonXBall (fork of BlockBall) - soccer / ball game plugin with 1.8 client support.
+softdepend: [ PlaceholderAPI, LuckPerms, ViaVersion, ViaBackwards, ViaRewind, Multiverse-Core, DecentHolograms ]
+commands:
+  blockball:
+    description: MoonXBall root command.
+    aliases: [ soccer, football, moonxball, mxball, mx ]
+  blockballscoreboard:
+    description: MoonXBall scoreboard command.
+    aliases: [ soccerscoreboard, footballscoreboard, mxscoreboard ]
+  blockballbossbar:
+    description: MoonXBall bossbar command.
+    aliases: [ soccerbossbar, footballbossbar, mxbossbar ]
+  blockballsign:
+    description: MoonXBall sign command.
+    aliases: [ soccersign, mxsign ]
+  blockballparticles:
+    description: MoonXBall particles command.
+    aliases: [ soccerparticles, mxparticles ]
+  blockballclub:
+    description: MoonXBall club command.
+    aliases: [ soccerclub, mxclub ]
+permissions:
+  blockball.command:
+    description: Allows access to the /blockball command.
+    default: true
+  blockball.edit:
+    description: Allows editing arenas.
+    default: op
+  blockball.join.*:
+    description: Wildcard permission to join any MoonXBall arena.
+    default: true
+  BlockMxc.join.*:
+    description: Wildcard permission to join any MoonXBall arena (new BlockMxc.* namespace).
+    default: true
+  blockball.cloud:
+    description: Allows cloud usage.
+    default: op
+  blockball.club.join.*:
+    description: Allows joining any club.
+    default: true
+  blockball.club.start.*:
+    description: Allows starting any club game.
+    default: true
+  blockball.referee.join:
+    description: Allows joining as referee.
+    default: op
+  blockball.command.staff:
+    description: Legacy staff permission.
+    default: op
+  blockball.game.inventory:
+    description: Legacy inventory permission.
+    default: op

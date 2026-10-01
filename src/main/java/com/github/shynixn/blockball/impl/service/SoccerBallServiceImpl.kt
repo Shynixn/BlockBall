@@ -25,7 +25,14 @@ class SoccerBallServiceImpl(
     private val particleEffectService: ParticleEffectService,
     private val plugin: Plugin
 ) : SoccerBallService {
-    private val soccerBallByEntity = HashMap<Int, SoccerBall>()
+    /**
+     * MoonXBall patch: this map was a plain HashMap and was concurrently
+     * mutated by `spawn` (region dispatcher) and read by `getByEntityId`
+     * (async packet event in BallListener). Concurrent HashMap.put/get
+     * can corrupt the table or return stale values. ConcurrentHashMap
+     * is the safe replacement.
+     */
+    private val soccerBallByEntity = java.util.concurrent.ConcurrentHashMap<Int, SoccerBall>()
 
     /**
      * Spawns a soccer ball of the given name.

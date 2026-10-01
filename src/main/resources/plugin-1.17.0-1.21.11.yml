@@ -1,8 +1,9 @@
-name: BlockBall
+name: MoonXBall
 version: 7.45.0
-author: Shynixn
+author: Shynixn, MoonX
 main: com.github.shynixn.blockball.BlockBallPlugin
-softdepend: [ PlaceholderAPI, LuckPerms]
+description: MoonXBall (fork of BlockBall) - soccer / ball game plugin with 1.8 client support.
+softdepend: [ PlaceholderAPI, LuckPerms, ViaVersion, ViaBackwards, ViaRewind, Multiverse-Core, DecentHolograms ]
 api-version: 1.13
 libraries:
   - com.github.shynixn.mccoroutine:mccoroutine-folia-api:2.22.0
@@ -11,4 +12,17 @@ libraries:
   - org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.25
   - org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0
   - com.zaxxer:HikariCP:5.1.0
-
+commands:
+  blockball:
+    description: MoonXBall root command.
+    aliases: [ soccer, football, moonxball, mxball, mx ]
+permissions:
+  blockball.command:
+    default: true
+  blockball.edit:
+    default: op
+  blockball.join.*:
+    default: true
+  BlockMxc.join.*:
+    description: Wildcard permission to join any MoonXBall arena (new BlockMxc.* namespace).
+    default: true

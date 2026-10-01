@@ -65,6 +65,11 @@ class GameServiceImpl(
 
     /**
      * Reloads all games.
+     *
+     * MoonXBall patch: each arena reload is wrapped in a try/catch so that
+     * a single bad arena file no longer aborts the reload loop for every
+     * subsequent arena. The failing arena is logged with its name and
+     * skipped; the rest are loaded normally.
      */
     override suspend fun reloadAll() {
         closeGames()
@@ -72,7 +77,13 @@ class GameServiceImpl(
         val arenas = arenaRepository.getAll()
 
         for (arena in arenas) {
-            reload(arena)
+            try {
+                reload(arena)
+            } catch (e: SoccerGameException) {
+                plugin.log.warning("Failed to reload arena '${arena.name}': ${e.message}")
+            } catch (e: Throwable) {
+                plugin.log.warning("Unexpected error reloading arena '${arena.name}': ${e.message}")
+            }
         }
     }
 
@@ -169,10 +180,20 @@ class GameServiceImpl(
         }
 
         games.toTypedArray().forEach { game ->
-            if (game.isDisposed) {
-                reload(game.arena)
-            } else {
-                game.handle(hasSecondPassed)
+            try {
+                if (game.isDisposed) {
+                    reload(game.arena)
+                } else {
+                    game.handle(hasSecondPassed)
+                }
+            } catch (e: SoccerGameException) {
+                // MoonXBall patch: a single bad arena used to terminate the
+                // game ticker coroutine (the exception escaped `init`'s
+                // `while (!isDisposed)` loop). Now we log and skip; the
+                // ticker survives.
+                plugin.log.warning("Game '${game.arena.name}' threw during tick: ${e.message}")
+            } catch (e: Throwable) {
+                plugin.log.warning("Unexpected error ticking game '${game.arena.name}': ${e.message}")
             }
         }
     }

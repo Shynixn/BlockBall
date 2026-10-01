@@ -1,5 +1,17 @@
 package com.github.shynixn.blockball
 
+import com.github.shynixn.blockball.compat.HandCompat
+import com.github.shynixn.blockball.compat.MaterialCompat
+import com.github.shynixn.blockball.compat.ServerVersion
+import com.github.shynixn.blockball.compat.SoundCompat
+import com.github.shynixn.blockball.compat.ViaVersionDetector
+import com.github.shynixn.blockball.compat.VersionCompat
+import com.github.shynixn.blockball.config.MoonXConfig
+import com.github.shynixn.blockball.gui.GameSelectionGUI
+import com.github.shynixn.blockball.hooks.DecentHologramsHook
+import com.github.shynixn.blockball.hooks.MultiverseCoreHook
+import com.github.shynixn.blockball.listeners.JoinItemListener
+import com.github.shynixn.blockball.scoreboard.LegacyScoreboardController
 import com.github.shynixn.blockball.contract.GameService
 import com.github.shynixn.blockball.contract.SoccerBallService
 import com.github.shynixn.blockball.contract.StatsService
@@ -69,7 +81,7 @@ import kotlin.coroutines.CoroutineContext
  * @author Shynixn
  */
 class BlockBallPlugin : JavaPlugin(), CoroutineHandler {
-    private val prefix: String = ChatColor.BLUE.toString() + "[BlockBall] "
+    private val prefix: String = ChatColor.GOLD.toString() + "[MoonXBall] "
     private var module: DependencyInjectionModule? = null
     private var scoreboardModule: DependencyInjectionModule? = null
     private var bossBarModule: DependencyInjectionModule? = null
@@ -77,6 +89,15 @@ class BlockBallPlugin : JavaPlugin(), CoroutineHandler {
     private var particlesModule: DependencyInjectionModule? = null
     private var guildModule: DependencyInjectionModule? = null
     private var immediateDisable = false
+
+    // MoonXBall additions
+    private var moonXConfig: MoonXConfig? = null
+    private var joinItemListener: JoinItemListener? = null
+    private var gameSelectionGUI: GameSelectionGUI? = null
+    private var legacyScoreboardController: LegacyScoreboardController? = null
+    private var multiverseHook: MultiverseCoreHook? = null
+    private var decentHologramsHook: DecentHologramsHook? = null
+    private var detectedServerVersion: ServerVersion = ServerVersion.UNKNOWN
 
     companion object {
         val playerDataKey = "playerData"
@@ -87,12 +108,28 @@ class BlockBallPlugin : JavaPlugin(), CoroutineHandler {
     }
 
     /**
-     * Enables the plugin BlockBall.
+     * Enables the plugin MoonXBall (formerly BlockBall).
      */
     override fun onEnable() {
-        Bukkit.getServer().consoleSender.sendMessage(prefix + ChatColor.GREEN + "Loading BlockBall ...")
+        // MoonXBall patch: migrate the legacy plugins/BlockBall data folder
+        // to plugins/MoonXBall on first run, BEFORE saveDefaultConfig() so the
+        // old config.yml, arena files, lang files etc. are preserved.
+        migrateDataFolder()
+        Bukkit.getServer().consoleSender.sendMessage(prefix + ChatColor.GREEN + "Loading MoonXBall ...")
         this.saveDefaultConfig()
         commonServer = Bukkit.getServer()
+
+        // MoonXBall compat layer: detect server version, init adapters.
+        detectedServerVersion = VersionCompat.detect()
+        MaterialCompat.init(detectedServerVersion)
+        SoundCompat.init()
+        HandCompat.init(detectedServerVersion)
+        ViaVersionDetector.init()
+        log.info("[MoonXBall] Server version bucket: $detectedServerVersion, ViaVersion available: ${ViaVersionDetector.isAvailable}")
+
+        // MoonXBall second config file.
+        moonXConfig = MoonXConfig(this).also { it.reload() }
+        log.info("[MoonXBall] Loaded MX_Blocball2.yml.")
         val versions = if (BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
             arrayOf(
                 Version.VERSION_1_8_R3,
@@ -209,6 +246,53 @@ class BlockBallPlugin : JavaPlugin(), CoroutineHandler {
         Bukkit.getPluginManager().registerEvents(module!!.getService<BallListener>(), this)
         Bukkit.getPluginManager().registerEvents(module!!.getService<ForceFieldListener>(), this)
 
+        // MoonXBall hooks (soft-depend; safe when absent).
+        multiverseHook = MultiverseCoreHook(this, moonXConfig!!.multiverseVerbose()).also { it.init() }
+        decentHologramsHook = DecentHologramsHook(this, moonXConfig!!.decentHologramsVerbose()).also { it.init() }
+
+        // MoonXBall join sword + GUI.
+        val gameService = module!!.getService<GameService>()
+        gameSelectionGUI = GameSelectionGUI(this, moonXConfig!!, gameService).also {
+            Bukkit.getPluginManager().registerEvents(it, this)
+            it.start()
+        }
+        joinItemListener = JoinItemListener(this, moonXConfig!!, gameSelectionGUI!!, detectedServerVersion).also {
+            Bukkit.getPluginManager().registerEvents(it, this)
+        }
+
+        // MoonXBall legacy-scoreboard controller for 1.8 clients.
+        if (moonXConfig!!.legacyScoreboardAdapter() && ViaVersionDetector.isAvailable) {
+            legacyScoreboardController = LegacyScoreboardController(
+                plugin = this,
+                placeholderEvaluator = { player, raw ->
+                    try {
+                        placeHolderService.resolvePlaceHolder(raw, player)
+                    } catch (_: Throwable) {
+                        raw
+                    }
+                }
+            ).also { ctrl ->
+                // Load title/lines from the bundled scoreboard config.
+                val sbConfig = org.bukkit.configuration.file.YamlConfiguration.loadConfiguration(
+                    java.io.InputStreamReader(getResource("scoreboard/blockball_scoreboard.yml")!!)
+                )
+                val title = sbConfig.getString("title", "&aMoonXBall")
+                val lines = sbConfig.getStringList("lines")
+                val behavior = when (moonXConfig!!.legacyScoreNumberBehavior().lowercase()) {
+                    "hide" -> LegacyScoreboardController.ScoreNumberBehavior.HIDE
+                    else -> LegacyScoreboardController.ScoreNumberBehavior.ORDER
+                }
+                ctrl.configure(
+                    title = title,
+                    lines = lines,
+                    refreshTicks = sbConfig.getInt("refreshTicks", 5).toLong(),
+                    behavior = behavior,
+                    stripHexColors = moonXConfig!!.legacyStripHexColors()
+                )
+                ctrl.start()
+            }
+        }
+
         //  Register CommandExecutor
         module!!.getService<BlockBallCommandExecutor>()
 
@@ -241,7 +325,64 @@ class BlockBallPlugin : JavaPlugin(), CoroutineHandler {
                 guildService.getGuilds(player)
             }
 
-            Bukkit.getServer().consoleSender.sendMessage(prefix + ChatColor.GREEN + "Enabled BlockBall " + plugin.description.version + " by Shynixn")
+            Bukkit.getServer().consoleSender.sendMessage(prefix + ChatColor.GREEN + "Enabled MoonXBall " + plugin.description.version + " by Shynixn, MoonX")
+        }
+    }
+
+    /**
+     * MoonXBall patch: migrates the legacy plugins/BlockBall data folder
+     * to plugins/MoonXBall on first run. The plugin's `name:` field is
+     * now "MoonXBall" so Bukkit looks for plugins/MoonXBall; we need to
+     * move the old folder so existing arenas/config/player-data are not
+     * lost.
+     *
+     * This method is idempotent: if either folder doesn't exist, or if
+     * the new folder already exists, it does nothing.
+     */
+    private fun migrateDataFolder() {
+        val parent = dataFolder.parentFile
+        val oldFolder = java.io.File(parent, "BlockBall")
+        val newFolder = dataFolder
+        if (!oldFolder.exists() || newFolder.exists()) return
+        try {
+            val ok = oldFolder.renameTo(newFolder)
+            if (ok) {
+                logger.info("[MoonXBall] Migrated data folder: ${oldFolder.name} -> ${newFolder.name}")
+            } else {
+                logger.warning("[MoonXBall] Could not rename $oldFolder to $newFolder; old data will not be visible.")
+            }
+        } catch (e: Throwable) {
+            logger.warning("[MoonXBall] Data folder migration failed: ${e.message}")
+        }
+    }
+
+    /**
+     * MoonXBall patch: reloads the MX_Blocball2.yml second config file.
+     * Called by `/blockball reload` (see [BlockBallCommandExecutor.reloadArena]).
+     */
+    fun reloadMoonXConfig() {
+        moonXConfig?.reload()
+        // Also re-init the legacy scoreboard controller in case its config
+        // (stripHexColors, scoreNumberBehavior, refreshTicks) changed.
+        try { legacyScoreboardController?.stop() } catch (_: Throwable) {}
+        if (moonXConfig?.legacyScoreboardAdapter() == true && ViaVersionDetector.isAvailable) {
+            // Re-configure using the updated config.
+            // (We don't re-create the controller; just re-configure.)
+            val sbConfig = org.bukkit.configuration.file.YamlConfiguration.loadConfiguration(
+                java.io.InputStreamReader(getResource("scoreboard/blockball_scoreboard.yml")!!)
+            )
+            val behavior = when (moonXConfig!!.legacyScoreNumberBehavior().lowercase()) {
+                "hide" -> LegacyScoreboardController.ScoreNumberBehavior.HIDE
+                else -> LegacyScoreboardController.ScoreNumberBehavior.ORDER
+            }
+            legacyScoreboardController?.configure(
+                title = sbConfig.getString("title", "&aMoonXBall"),
+                lines = sbConfig.getStringList("lines"),
+                refreshTicks = sbConfig.getInt("refreshTicks", 5).toLong(),
+                behavior = behavior,
+                stripHexColors = moonXConfig!!.legacyStripHexColors()
+            )
+            legacyScoreboardController?.start()
         }
     }
 
@@ -285,6 +426,11 @@ class BlockBallPlugin : JavaPlugin(), CoroutineHandler {
             playerDataRepository?.clearAll()
             playerDataRepository?.close()
         }
+
+        // MoonXBall: tear down new components.
+        try { gameSelectionGUI?.stop() } catch (_: Throwable) {}
+        try { legacyScoreboardController?.stop() } catch (_: Throwable) {}
+        try { decentHologramsHook?.onDisable() } catch (_: Throwable) {}
 
         module?.close()
         scoreboardModule?.close()

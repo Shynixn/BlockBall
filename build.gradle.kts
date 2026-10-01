@@ -13,13 +13,29 @@ version = "7.45.0"
 repositories {
     mavenCentral()
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
-    maven(System.getenv("SHYNIXN_MCUTILS_REPOSITORY_2026")) // All MCUTILS libraries are private and not OpenSource.
+    // MX_Blocball2 soft-depend hooks.
+    maven("https://jitpack.io") // DecentHolograms, Multiverse-Core
+    // All MCUTILS libraries are private and not OpenSource.
+    // MoonXBall: gracefully fall back to mavenLocal() when the env var is unset
+    // (e.g. on CI without the private repo) so the script still configures itself.
+    val mcutilsRepo = System.getenv("SHYNIXN_MCUTILS_REPOSITORY_2026")
+    if (mcutilsRepo != null) {
+        maven(mcutilsRepo)
+    } else {
+        mavenLocal()
+    }
     maven("https://maven.shynixn.com/releases")
 }
 
 dependencies {
     // Compile Only
     compileOnly("org.spigotmc:spigot-api:1.18.2-R0.1-SNAPSHOT")
+
+    // MoonXBall soft-depend hooks (compileOnly; runtime-resolved via plugin.yml softdepend).
+    // DecentHolograms: latest stable tag on jitpack as of 2026-10 is 2.8.12.
+    compileOnly("com.github.decentsoftware-eu:decentholograms:2.8.12")
+    // Multiverse-Core: 4.3.12 (5.x is API-compatible for the surface we use; resolved reflectively).
+    compileOnly("com.github.Multiverse:Multiverse-Core:4.3.12")
 
     // Library dependencies with legacy compatibility, we can use more up-to-date version in the plugin.yml
     implementation("com.github.shynixn.mccoroutine:mccoroutine-folia-api:2.22.0")

@@ -1,0 +1,183 @@
+#######################################################################
+#                          MoonXBall                                  #
+#                  Special Settings (File 2 of 2)                     #
+#                                                                   #
+#  This is the SECOND configuration file introduced by MoonXBall.    #
+#  The legacy config.yml remains the source of truth for arenas,   #
+#  database, scoreboard refresh, bossbar, signs, particles, cloud,  #
+#  leaderboard and clubs. Anything NEW that ships as part of the    #
+#  MoonXBall feature set (join sword, Selection Area GUI, hooks,    #
+#  messages, sounds, permissions) lives here.                       #
+#                                                                   #
+#  On plugin enable this file is:                                   #
+#    1. Saved from /resources/MX_Blocball2.yml on first run.        #
+#    2. Auto-merged with any missing keys added on upgrade.         #
+#    3. Reloaded by /blockball reload.                              #
+#                                                                   #
+#  Color codes: legacy '&' codes are supported everywhere in this   #
+#  file. Hex colors (#aabbcc) are supported on 1.16+ clients only;  #
+#  legacy 1.8 clients will receive a nearest-legacy-color fallback. #
+#######################################################################
+
+#######################################################################
+#                       Lobby Definition                              #
+#######################################################################
+# A player is considered "in a lobby" (and therefore receives the    #
+# Join-An-Game wooden sword) when ANY of these conditions is true:   #
+#   * They are in one of the worlds listed in `lobbyWorlds`.         #
+#   * They are not currently participating in a MoonXBall game.      #
+# Set `lobbyWorlds` to an empty list to use only the "not in game"   #
+# condition.                                                          #
+lobby:
+  worlds: []
+  # If true, the join sword is only given to players who are NOT in
+  # a MoonXBall game (regardless of which world they stand in).
+  # If false, the sword is given to every player in one of `lobbyWorlds`.
+  giveWhenNotInGame: true
+
+#######################################################################
+#                       Join-An-Game Sword                           #
+#######################################################################
+# Item placed in every lobby player's hotbar. Right-click or left-   #
+# click opens the Selection Area GUI.                                 #
+#                                                                    #
+# HOTBAR SLOT INDEXING:                                              #
+#   In Minecraft the hotbar shows slots 1..9 in the UI, but Bukkit  #
+#   uses a 0-based index (0..8). Slot "4" in the UI = index 3 in    #
+#   Bukkit. Set `slot` to the BUKKIT INDEX (0..8). Default 3.       #
+joinItem:
+  material: "WOOD_SWORD"
+  # On 1.8 the name is WOOD_SWORD. On 1.13+ it is WOODEN_SWORD.
+  # MoonXBall auto-resolves both via the compat layer; pick either.
+  displayName: "&6&lJoin An Game &7(Right-Click)"
+  lore:
+    - "&7Right-click or left-click"
+    - "&7to open the game selection."
+  slot: 3
+  glow: false
+  # Internal marker (do not change unless you know what you are doing).
+  # Used by the PersistentDataContainer marker on 1.14+ and a hidden
+  # lore-string marker on 1.8.
+  marker: "moonxball.joinitem"
+
+#######################################################################
+#                       Selection Area GUI                           #
+#######################################################################
+# The menu that opens when the player right-clicks the join sword.  #
+gui:
+  title: "&8&lSelection Area"
+  size: 27
+  filler:
+    material: "BLACK_STAINED_GLASS_PANE"
+    displayName: " "
+    lore: []
+    glow: false
+  arenaItem:
+    # Placeholders available in displayName / lore:
+    #   %arena_name%        internal name (used for permissions)
+    #   %arena_display%     display name (or internal name if not set)
+    #   %arena_state%       WAITING / RUNNING / FULL / DISABLED
+    #   %arena_players%     current player count
+    #   %arena_maxplayers%  max player count
+    #   %arena_minplayers%  min player count
+    #   %arena_locked%      "yes" if the player lacks permission, "no" otherwise
+    displayName: "&a%arena_display%"
+    waitingMaterial: "LIME_WOOL"
+    runningMaterial: "YELLOW_WOOL"
+    fullMaterial: "RED_WOOL"
+    disabledMaterial: "GRAY_WOOL"
+    lockedMaterial: "BARRIER"
+    lore:
+      - "&7State: &f%arena_state%"
+      - "&7Players: &f%arena_players%/%arena_maxplayers%"
+      - "&7Min: &f%arena_minplayers%"
+      - ""
+      - "&eClick to join!"
+  refreshTicks: 20
+  closeOnJoin: true
+
+#######################################################################
+#                          Messages                                  #
+#######################################################################
+messages:
+  noPermissionArena: "&cYou do not have permission to join arena %arena_name%."
+  arenaNotFound: "&cArena %arena_name% was not found."
+  arenaFull: "&cArena %arena_name% is full."
+  arenaDisabled: "&cArena %arena_name% is disabled."
+  joinSuccess: "&aJoined arena %arena_display%."
+  leaveSuccess: "&aLeft the arena."
+  guiOpened: "&7Opening Selection Area..."
+  swordReceived: "&7You received the Join-An-Game sword."
+
+#######################################################################
+#                            Sounds                                  #
+#######################################################################
+sounds:
+  openGui:
+    sound: "UI_BUTTON_CLICK"
+    volume: 1.0
+    pitch: 1.0
+  joinArena:
+    sound: "ENTITY_EXPERIENCE_ORB_PICKUP"
+    volume: 1.0
+    pitch: 1.0
+  noPermission:
+    sound: "BLOCK_ANVIL_LAND"
+    volume: 0.6
+    pitch: 1.0
+
+#######################################################################
+#                          Hooks                                     #
+#######################################################################
+hooks:
+  multiverseCore:
+    enabled: true
+    # When true, MoonXBall will use Multiverse-Core to:
+    #   * load worlds referenced by arenas/lobbies (if missing)
+    #   * teleport players between worlds respecting MV per-world rules
+    #   * report a friendly warning when a world is referenced but not loaded
+    verbose: true
+  decentHolograms:
+    enabled: true
+    # When true, MoonXBall renders arena stats / join info / goal score
+    # holograms via DecentHolograms. When false (or DH is missing),
+    # holograms are silently disabled (no-op).
+    verbose: true
+    # Refresh cadence for live stat holograms (ticks).
+    refreshTicks: 40
+
+#######################################################################
+#                       Permissions                                 #
+#######################################################################
+permissions:
+  # The base node used for per-arena join permission checks.
+  #  - <joinNode>.<arenaname_lowercase>  => per-arena grant
+  #  - <joinNode>.*                     => wildcard grant (default true)
+  # Two nodes are checked (in order):
+  #   1. BlockMxc.join.<arenaname>      (new MoonXBall node)
+  #   2. blockball.join.<arenaname>     (legacy node, kept for backwards compat)
+  # A player who has EITHER node (or the matching wildcard) may join.
+  joinNode: "BlockMxc.join"
+  legacyJoinNode: "blockball.join"
+  # When true, a player with no join permission still SEES the arena
+  # in the Selection Area GUI, but it is displayed as locked (red barrier)
+  # and clicking it sends the noPermissionArena message.
+  showLockedArenas: true
+
+#######################################################################
+#                       1.8 Compatibility                            #
+#######################################################################
+legacyClient:
+  # When true, MoonXBall detects 1.8.x clients via the ViaVersion API
+  # and sends them a 1.8-safe scoreboard (line split into prefix/
+  # entry/suffix, no hex colors, padded unique entries).
+  scoreboardAdapter: true
+  # What to show next to each scoreboard line on legacy clients.
+  # 1.8 always renders the red score number, so we either:
+  #   "hide"  -> set every line score to 0 (lines will all appear at 0).
+  #   "order" -> set incrementing scores (15, 14, 13, ...) so the
+  #              visual order top-to-bottom matches config order.
+  scoreNumberBehavior: "order"
+  # Strip hex (#aabbcc) colors on legacy clients, replacing them
+  # with the nearest legacy color (preset palette).
+  stripHexColors: true
