@@ -85,7 +85,8 @@ class MoonXConfig(private val plugin: Plugin) {
     fun getInt(path: String, default: Int = 0): Int = cached.getInt(path, default)
     fun getBoolean(path: String, default: Boolean = false): Boolean = cached.getBoolean(path, default)
     fun getDouble(path: String, default: Double = 0.0): Double = cached.getDouble(path, default)
-    fun getStringList(path: String): List<String> = cached.getStringList(path) ?: emptyList()
+    fun getStringList(path: String): List<String> =
+        cached.getStringList(path).ifEmpty { emptyList() }
 
     /**
      * Returns the lobby worlds configured by the user. Empty list => use

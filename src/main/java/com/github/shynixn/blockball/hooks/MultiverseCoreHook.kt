@@ -72,8 +72,6 @@ class MultiverseCoreHook(private val plugin: Plugin, private val verbose: Boolea
     fun init() {
         // Try MV 4.x first.
         try {
-            val coreClass4 = Class.forName("com.onarandombox.MultiverseCore.MultiverseCore")
-            val getPluginMethod = org.bukkit.plugin.java.JavaPlugin::class.java
             val pluginRef = Bukkit.getPluginManager().getPlugin("Multiverse-Core")
             if (pluginRef != null && pluginRef.javaClass.name.startsWith("com.onarandombox")) {
                 core4Instance = pluginRef
@@ -127,9 +125,11 @@ class MultiverseCoreHook(private val plugin: Plugin, private val verbose: Boolea
         // 4.x
         try {
             core4GetMVWorldMethod?.let {
-                val mvWorld = it.invoke(core4MVWorldManager, worldName) ?: return@let
-                if (verbose) log(Level.INFO, "MV 4.x reports world '$worldName' as loaded.")
-                return true
+                val mvWorld = it.invoke(core4MVWorldManager, worldName)
+                if (mvWorld != null) {
+                    if (verbose) log(Level.INFO, "MV 4.x reports world '$worldName' as loaded.")
+                    return true
+                }
             }
         } catch (_: Throwable) { /* fall through */ }
         // 5.x

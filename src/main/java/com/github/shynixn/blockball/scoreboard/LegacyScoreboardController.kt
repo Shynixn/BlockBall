@@ -74,7 +74,7 @@ class LegacyScoreboardController(
      * Players we are actively rendering to (added by [onJoin] / re-detected
      * on each tick). Players are removed by [onQuit] / [onDisable].
      */
-    private val trackedPlayers: MutableSet<java.util.UUID> = java.util.concurrent.newKeySet()
+    private val trackedPlayers: MutableSet<java.util.UUID> = java.util.concurrent.ConcurrentHashMap.newKeySet()
 
     fun configure(
         title: String,
@@ -233,6 +233,7 @@ class LegacyScoreboardController(
     private fun sendObjectiveCreate(player: Player, title: String) {
         player.scoreboard.let { sb ->
             try {
+                @Suppress("DEPRECATION")
                 val objective = sb.registerNewObjective(ourObjectiveName, "dummy")
                 objective.displayName = title
                 objective.displaySlot = org.bukkit.scoreboard.DisplaySlot.SIDEBAR

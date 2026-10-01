@@ -112,10 +112,9 @@ object MaterialCompat {
     private fun parseMaterialSpec(spec: String): Material? {
         val parts = spec.split(":")
         val name = parts[0]
-        val data = if (parts.size > 1) parts[1].toIntOrNull() ?: 0 else 0
-        // Material.getMaterial(name) is the safest cross-version lookup.
         // The data-byte variant only exists on 1.12 and below; on 1.13+
         // data bytes are baked into the Material enum so we ignore them.
+        // (parts[1] is intentionally unused on 1.13+ — kept for diagnostic clarity.)
         val mat = Material.values().firstOrNull { it.name == name } ?: return null
         return mat
     }

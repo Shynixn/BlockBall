@@ -53,7 +53,7 @@ class GameSelectionGUI(
 ) : Listener {
 
     /** Currently-open GUIs (player UUID -> inventory), used for refresh. */
-    private val openGUIs: MutableMap<UUID, Inventory> java.util.concurrent.ConcurrentHashMap()
+    private val openGUIs: MutableMap<UUID, Inventory> = java.util.concurrent.ConcurrentHashMap()
 
     /** Per-refresh task. */
     private var task: BukkitTask? = null
@@ -94,7 +94,7 @@ class GameSelectionGUI(
 
     @EventHandler(priority = EventPriority.HIGHEST)
     fun onClick(event: InventoryClickEvent) {
-        val holder = event.inventory?.holder ?: return
+        val holder = event.inventory.holder ?: return
         if (holder !is GameSelectionHolder) return
         // Cancel EVERY click inside our GUI (no item stealing).
         event.isCancelled = true
@@ -102,13 +102,15 @@ class GameSelectionGUI(
         val clicked = event.currentItem ?: return
         val arenaName = readArenaName(clicked) ?: return
 
-        // Resolve the arena.
-        val arena = gameService.getAll().firstOrNull { it.arena.name == arenaName }?.arena
-            ?: gameService.getAll().firstOrNull { it.arena.displayName == arenaName }?.arena
-        ?: run {
+        // Resolve the arena: try internal name first, then display name.
+        val game0 = gameService.getAll().firstOrNull { it.arena.name == arenaName }
+            ?: gameService.getAll().firstOrNull { it.arena.displayName == arenaName }
+        if (game0 == null) {
             player.sendMessage(replaceArena(ChatColor.translateAlternateColorCodes('&', config.messageArenaNotFound()), arenaName))
             return
         }
+        val arena = game0.arena
+
         // Check permissions.
         if (!hasJoinPermission(player, arena.name)) {
             player.sendMessage(replaceArena(ChatColor.translateAlternateColorCodes('&', config.messageNoPermissionArena()), arena.name))
@@ -116,12 +118,11 @@ class GameSelectionGUI(
             return
         }
         // Check state.
-        val game = gameService.getAll().firstOrNull { it.arena.name == arena.name }
-        if (game == null || !arena.enabled) {
+        if (!arena.enabled) {
             player.sendMessage(replaceArena(ChatColor.translateAlternateColorCodes('&', config.messageArenaDisabled()), arena.name))
             return
         }
-        if (game.status == GameState.RUNNING || isFull(game)) {
+        if (game0.status == GameState.RUNNING || isFull(game0)) {
             player.sendMessage(replaceArena(ChatColor.translateAlternateColorCodes('&', config.messageArenaFull()), arena.name))
             return
         }
@@ -134,7 +135,7 @@ class GameSelectionGUI(
 
     @EventHandler(priority = EventPriority.MONITOR)
     fun onClose(event: InventoryCloseEvent) {
-        val holder = event.inventory?.holder ?: return
+        val holder = event.inventory.holder ?: return
         if (holder !is GameSelectionHolder) return
         val player = event.player as? Player ?: return
         onClose(player)
@@ -252,7 +253,7 @@ class GameSelectionGUI(
     }
 
     private fun isFull(game: SoccerGame): Boolean {
-        val max = game.arena.meta.blueTeamMeta.maxAmount + game.arena.meta.redTeamMeta.maxAmount
+        val max: Int = game.arena.meta.blueTeamMeta.maxAmount + game.arena.meta.redTeamMeta.maxAmount
         return game.getPlayers().size >= max
     }
 
@@ -296,8 +297,20 @@ class GameSelectionGUI(
         } catch (_: Throwable) { /* sound errors are non-fatal */ }
     }
 
-    /** Marker holder so we can detect our own GUIs. */
+    /** Marker holder so we can detect our own GUIs. Returns a 0-size inventory
+     *  as the contract requires a non-null Inventory; the actual rendered
+     *  inventory is the one we create via Bukkit.createInventory(...). */
     class GameSelectionHolder : org.bukkit.inventory.InventoryHolder {
-        override fun getInventory(): Inventory? = null
+        override fun getInventory(): org.bukkit.inventory.Inventory {
+            // Return a tiny 0-slot inventory so the contract is satisfied
+            // without allocating a player-visible one.
+            return _empty ?: synchronized(LOCK) {
+                _empty ?: org.bukkit.Bukkit.createInventory(null, 0, "").also { _empty = it }
+            }
+        }
+        companion object {
+            private val LOCK = Any()
+            @Volatile private var _empty: org.bukkit.inventory.Inventory? = null
+        }
     }
 }

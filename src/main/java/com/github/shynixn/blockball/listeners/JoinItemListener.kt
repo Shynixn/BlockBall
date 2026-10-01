@@ -61,7 +61,7 @@ class JoinItemListener(
 ) : Listener {
 
     /** Players currently considered "in a game"; they should NOT hold the sword. */
-    private val inGamePlayers: MutableSet<UUID> = java.util.concurrent.newKeySet()
+    private val inGamePlayers: MutableSet<UUID> = java.util.concurrent.ConcurrentHashMap.newKeySet()
 
     /** Debounce per-player for dual-hand interact events. */
     private val interactDebounce: MutableMap<UUID, Long> = java.util.concurrent.ConcurrentHashMap()
@@ -83,7 +83,6 @@ class JoinItemListener(
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     fun onTeleport(event: PlayerTeleportEvent) {
-        if (event.player == null) return
         val player = event.player
         org.bukkit.Bukkit.getScheduler().runTaskLater(plugin, Runnable {
             // Re-evaluate sword eligibility on world change.
@@ -178,7 +177,7 @@ class JoinItemListener(
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    fun onItemHeld(event: PlayerItemHeldEvent) {
+    fun onItemHeld(@Suppress("UNUSED_PARAMETER") event: PlayerItemHeldEvent) {
         // Don't prevent switching TO the sword slot; we just want to make
         // sure the sword stays in its configured slot. If the player tried
         // to swap it via number keys, onInventoryClick already cancelled it.

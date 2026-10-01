@@ -71,11 +71,11 @@ object LegacyScoreboardLineSplitter {
         if (input.isEmpty()) return input
         // Strip the long SSS form: &x&a&a&b&b&c&c (BungeeCord-style hex encoding).
         val sss = Regex("""&x(&[0-9a-fA-F]){6}""")
-        var out = sss.replace(input) { _ ->
+        var out = sss.replace(input) { mr ->
             // Try to convert to nearest legacy color via downsampleHex; if it fails, drop.
-            val m = Regex("""&([0-9a-fA-F])""").findAll(it.value).map { g -> g.groupValues[1] }.toList()
-            if (m.size != 6) return@replace ""
-            val hex = m.joinToString("")
+            val matches = Regex("""&([0-9a-fA-F])""").findAll(mr.value).map { g -> g.groupValues[1] }.toList()
+            if (matches.size != 6) return@replace ""
+            val hex = matches.joinToString("")
             downsampleHex("#$hex").let { if (it.isEmpty()) "" else it }
         }
         // Strip the short form: &#aabbcc or #aabbcc (without '&x' prefix).
