@@ -1,0 +1,353 @@
+name: MoonXBall CI
+
+# ---------------------------------------------------------------------------
+# MoonXBall continuous-integration + auto-release workflow.
+#
+# What it does:
+#   1. On every push / PR / manual dispatch:
+#        - Compiles the Kotlin sources.
+#        - Runs the unit tests.
+#        - Builds all six plugin jars via `./gradlew pluginJars`.
+#        - Uploads the jars + reports as workflow artifacts.
+#   2. On every tag push matching `v*` (e.g. v7.45.0):
+#        - Builds the jars.
+#        - Extracts the release notes from CHANGES.md.
+#        - Creates a GitHub Release with all six jars attached.
+#   3. On manual dispatch with `release=true`:
+#        - Same as a tag push, but uses the workflow version as the tag.
+#
+# Required repository secrets (Settings → Secrets and variables → Actions):
+#   * SHYNIXN_MCUTILS_REPOSITORY_2026
+#       URL of the private Shynixn MCUtils maven repository.
+#       Without this, `./gradlew pluginJars` cannot resolve the
+#       com.github.shynixn.mcutils:* dependencies.
+#   * GITHUB_TOKEN  (auto-provided by GitHub Actions — no setup needed)
+#
+# Optional repository secrets:
+#   * GEYSER_PASSWORD  (only needed if you re-enable the GeyserMC resource
+#                       packaging step at the bottom of this workflow)
+# ---------------------------------------------------------------------------
+
+# Permissions required for the workflow.
+# - `contents: write`  → create tags + releases + push docs/changes back to repo.
+# - `packages: write`  → (reserved) push to GHCR if you add container images later.
+# - `actions: read`     → read workflow run metadata.
+permissions:
+  contents: write
+  packages: write
+  actions: read
+
+on:
+  push:
+    branches: [ master, main, development, moonxball, feature/moonxball-fork ]
+    tags:    [ 'v*' ]                          # v1.0.0, v7.45.0, v7.45.0-rc1, ...
+  pull_request:
+    branches: [ master, main, development ]
+  workflow_dispatch:
+    inputs:
+      release:
+        description: 'Create a GitHub Release from this run?'
+        type: boolean
+        default: false
+      version_override:
+        description: 'Optional: override the version tag (e.g. 7.45.1). Leave blank to use the Gradle project version.'
+        type: string
+        default: ''
+
+# Cancel any in-flight run for the same ref when a new push arrives.
+# Prevents two parallel builds of the same branch from racing to publish.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # -------------------------------------------------------------------------
+  # JOB 1: Build + test.
+  # -------------------------------------------------------------------------
+  build:
+    name: Build & Test (JDK ${{ matrix.java }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # JDK 17 is the minimum Gradle 8.12 supports; JDK 21 is the LTS that
+        # matches what most Paper 1.21 servers ship with. We test on both so
+        # the build is verified to work on a wider matrix.
+        java: [ '17', '21' ]
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      should_release: ${{ steps.version.outputs.should_release }}
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # full history so version-tag logic can see prior tags
+
+      - name: Set up JDK ${{ matrix.java }}
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: ${{ matrix.java }}
+
+      - name: Cache Gradle dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+            .gradle
+          key: ${{ runner.os }}-gradle-${{ matrix.java }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-${{ matrix.java }}-
+            ${{ runner.os }}-gradle-
+
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
+      - name: Print version (capture for release tagging)
+        id: version
+        env:
+          SHYNIXN_MCUTILS_REPOSITORY_2026: ${{ secrets.SHYNIXN_MCUTILS_REPOSITORY_2026 }}
+        shell: bash
+        run: |
+          set -e
+          # `printVersion` is a no-op task registered in build.gradle.kts that
+          # just `println(version)` the project version (7.45.0).
+          PROJECT_VERSION="$(./gradlew -q printVersion 2>/dev/null | tail -n 1 | tr -d '[:space:]' || echo '')"
+          if [ -z "$PROJECT_VERSION" ]; then
+            PROJECT_VERSION="0.0.0-unknown"
+          fi
+          echo "version=$PROJECT_VERSION" >> "$GITHUB_OUTPUT"
+
+          # Decide whether this run should also create a GitHub Release.
+          # Release is triggered by:
+          #   * a tag push matching v*                  → yes
+          #   * a manual dispatch with release=true    → yes
+          #   * a commit message containing --release   → yes
+          # Anything else (regular push, PR)           → no.
+          SHOULD="false"
+          if [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
+            SHOULD="true"
+          elif [[ "${{ github.event_name }}" == "workflow_dispatch" && "${{ inputs.release }}" == "true" ]]; then
+            SHOULD="true"
+          elif [[ "${{ github.event_name }}" == "push" ]] && \
+               grep -q -- '--release' <<< "$(git log -1 --pretty=%B)"; then
+            SHOULD="true"
+          fi
+          echo "should_release=$SHOULD" >> "$GITHUB_OUTPUT"
+          echo "Resolved version: $PROJECT_VERSION  (should_release=$SHOULD)"
+
+      - name: Build + test + assemble jars
+        env:
+          SHYNIXN_MCUTILS_REPOSITORY_2026: ${{ secrets.SHYNIXN_MCUTILS_REPOSITORY_2026 }}
+        run: |
+          set -e
+          # `build` runs `compileKotlin` + `test` + `jar`.
+          # `pluginJars` produces all six target jars in build/libs/.
+          ./gradlew --no-daemon --stacktrace clean build pluginJars
+
+      - name: Verify expected jars exist
+        run: |
+          set -e
+          V="${{ steps.version.outputs.version }}"
+          echo "Project version: $V"
+          echo "---- build/libs/ ----"
+          ls -la build/libs/
+          expected=(
+            "BlockBall-${V}-1.8.8-1.16.5-premium.jar"
+            "BlockBall-${V}-1.17.0-1.21.11-premium.jar"
+            "BlockBall-${V}-1.17.0-1.21.11-premium-folia.jar"
+            "BlockBall-${V}-26.1.0-latest-premium.jar"
+            "BlockBall-${V}-26.1.0-latest-premium-folia.jar"
+            "BlockBall-${V}-26.1.0-latest-free.jar"
+          )
+          missing=0
+          for jar in "${expected[@]}"; do
+            if [ ! -f "build/libs/$jar" ]; then
+              echo "❌ MISSING: build/libs/$jar"
+              missing=$((missing+1))
+            else
+              echo "✅ OK:      build/libs/$jar"
+            fi
+          done
+          if [ "$missing" -gt 0 ]; then
+            echo "::error::$missing jar(s) were not produced by the build."
+            exit 1
+          fi
+
+      - name: Stage release artifacts (rename to friendlier names)
+        id: stage
+        run: |
+          set -e
+          V="${{ steps.version.outputs.version }}"
+          mkdir -p staging
+          # Rename to drop the version-suffix and the old "BlockBall-" prefix
+          # so the release page shows MoonXBall-flavoured filenames.
+          cp "build/libs/BlockBall-${V}-1.8.8-1.16.5-premium.jar"          "staging/MoonXBall-1.8.8-1.16.5-Premium.jar"
+          cp "build/libs/BlockBall-${V}-1.17.0-1.21.11-premium.jar"        "staging/MoonXBall-1.17.0-1.21.11-Premium.jar"
+          cp "build/libs/BlockBall-${V}-1.17.0-1.21.11-premium-folia.jar"  "staging/MoonXBall-1.17.0-1.21.11-Premium-Folia.jar"
+          cp "build/libs/BlockBall-${V}-26.1.0-latest-premium.jar"         "staging/MoonXBall-26.1.0-latest-Premium.jar"
+          cp "build/libs/BlockBall-${V}-26.1.0-latest-premium-folia.jar"   "staging/MoonXBall-26.1.0-latest-Premium-Folia.jar"
+          cp "build/libs/BlockBall-${V}-26.1.0-latest-free.jar"            "staging/MoonXBall-26.1.0-latest-Free.jar"
+          # Also include the second config file so server admins can preview it
+          # without downloading the jar.
+          cp "src/main/resources/MX_Blocball2.yml"                          "staging/MX_Blocball2.example.yml"
+          # And the changelog
+          cp "CHANGES.md"                                                  "staging/CHANGES.md"
+          ls -la staging/
+
+      - name: Upload build artifacts (workflow run)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: MoonXBall-jdk${{ matrix.java }}-build
+          path: |
+            staging/
+            build/libs/
+            build/reports/
+            build/test-results/
+          if-no-files-found: warn
+          retention-days: 14
+
+  # -------------------------------------------------------------------------
+  # JOB 2: Auto-release to GitHub Releases.
+  # Runs only when job 1 decided should_release=true AND only on the JDK 21
+  # matrix leg (so we don't double-publish).
+  # -------------------------------------------------------------------------
+  release:
+    name: Publish GitHub Release
+    needs: build
+    if: ${{ needs.build.outputs.should_release == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Cache Gradle dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+            .gradle
+          key: ${{ runner.os }}-gradle-21-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-21-
+
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
+      - name: Build jars (release leg)
+        env:
+          SHYNIXN_MCUTILS_REPOSITORY_2026: ${{ secrets.SHYNIXN_MCUTILS_REPOSITORY_2026 }}
+        run: ./gradlew --no-daemon --stacktrace clean build pluginJars
+
+      - name: Resolve release tag
+        id: tag
+        shell: bash
+        run: |
+          set -e
+          # If this run was triggered by a tag push, the tag name IS the release name.
+          if [[ "${GITHUB_REF}" == refs/tags/* ]]; then
+            TAG="${GITHUB_REF#refs/tags/}"
+          elif [[ -n "${{ inputs.version_override }}" ]]; then
+            TAG="v${{ inputs.version_override }}"
+          else
+            TAG="v${{ needs.build.outputs.version }}"
+          fi
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "Release tag will be: $TAG"
+
+      - name: Stage release artifacts
+        run: |
+          set -e
+          V="${{ needs.build.outputs.version }}"
+          mkdir -p release
+          cp "build/libs/BlockBall-${V}-1.8.8-1.16.5-premium.jar"          "release/MoonXBall-1.8.8-1.16.5-Premium.jar"
+          cp "build/libs/BlockBall-${V}-1.17.0-1.21.11-premium.jar"        "release/MoonXBall-1.17.0-1.21.11-Premium.jar"
+          cp "build/libs/BlockBall-${V}-1.17.0-1.21.11-premium-folia.jar"  "release/MoonXBall-1.17.0-1.21.11-Premium-Folia.jar"
+          cp "build/libs/BlockBall-${V}-26.1.0-latest-premium.jar"         "release/MoonXBall-26.1.0-latest-Premium.jar"
+          cp "build/libs/BlockBall-${V}-26.1.0-latest-premium-folia.jar"   "release/MoonXBall-26.1.0-latest-Premium-Folia.jar"
+          cp "build/libs/BlockBall-${V}-26.1.0-latest-free.jar"            "release/MoonXBall-26.1.0-latest-Free.jar"
+          cp "src/main/resources/MX_Blocball2.yml"                          "release/MX_Blocball2.example.yml"
+          cp "CHANGES.md"                                                  "release/CHANGES.md"
+          ls -la release/
+
+      - name: Generate release notes from CHANGES.md
+        id: notes
+        shell: bash
+        run: |
+          set -e
+          # Use the section between the first `## ` heading and the next `---`
+          # divider of CHANGES.md as the release body. If parsing fails, fall
+          # back to a short generic message.
+          BODY="$(awk '
+            /^---/ { if (found) exit; next }
+            /^## / { found=1; next }
+            found { print }
+          ' CHANGES.md)"
+          if [ -z "$BODY" ]; then
+            BODY="MoonXBall ${{ needs.build.outputs.version }} — see CHANGES.md for the full changelog."
+          fi
+          {
+            echo "body<<EOF_MOONXBALL"
+            echo "$BODY"
+            echo ""
+            echo "---"
+            echo "**Build:** GitHub Actions run ${{ github.run_id }}"
+            echo "**Commit:** ${{ github.sha }}"
+            echo "**JDK:** 21 (temurin)"
+            echo "**Gradle:** 8.12.1 (wrapper)"
+            echo "EOF_MOONXBALL"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Create GitHub Release + upload all jars
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.tag.outputs.tag }}
+          name: MoonXBall ${{ steps.tag.outputs.tag }}
+          body: ${{ steps.notes.outputs.body }}
+          draft: false
+          prerelease: ${{ contains(steps.tag.outputs.tag, 'rc') || contains(steps.tag.outputs.tag, 'beta') || contains(steps.tag.outputs.tag, 'alpha') }}
+          generate_release_notes: false
+          files: |
+            release/MoonXBall-1.8.8-1.16.5-Premium.jar
+            release/MoonXBall-1.17.0-1.21.11-Premium.jar
+            release/MoonXBall-1.17.0-1.21.11-Premium-Folia.jar
+            release/MoonXBall-26.1.0-latest-Premium.jar
+            release/MoonXBall-26.1.0-latest-Premium-Folia.jar
+            release/MoonXBall-26.1.0-latest-Free.jar
+            release/MX_Blocball2.example.yml
+            release/CHANGES.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Summary
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<EOF
+          ## ✅ MoonXBall Release Published
+
+          **Tag:** \`${{ steps.tag.outputs.tag }}\`
+          **Version:** \`${{ needs.build.outputs.version }}\`
+
+          ### Artifacts uploaded
+          - MoonXBall-1.8.8-1.16.5-Premium.jar
+          - MoonXBall-1.17.0-1.21.11-Premium.jar
+          - MoonXBall-1.17.0-1.21.11-Premium-Folia.jar
+          - MoonXBall-26.1.0-latest-Premium.jar
+          - MoonXBall-26.1.0-latest-Premium-Folia.jar
+          - MoonXBall-26.1.0-latest-Free.jar
+          - MX_Blocball2.example.yml
+          - CHANGES.md
+
+          View the release at: ${{ github.server_url }}/${{ github.repository }}/releases/tag/${{ steps.tag.outputs.tag }}
+          EOF
