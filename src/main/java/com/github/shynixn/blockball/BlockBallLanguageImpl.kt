@@ -260,6 +260,8 @@ class BlockBallLanguageImpl : BlockBallLanguage {
 
  override var goalKickPerformMessage = LanguageItem("&a&lGO!")
 
+ override var commandReJoinToolTip = LanguageItem("Rejoin the last game you played if it is still running.")
+
  override var shyScoreboardPlayerNotFoundMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &cPlayer %blockball_param_1% not found.")
 
  override var shyScoreboardNoPermissionCommand = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &cYou do not have permission to execute this command.")

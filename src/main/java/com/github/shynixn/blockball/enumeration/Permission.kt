@@ -10,6 +10,9 @@ enum class Permission(val permission: String) {
 
     CLUB_JOIN("blockball.club.join.[name]"),
     CLUB_START("blockball.club.start.[name]"),
+
+    REJOIN("blockball.rejoin.[name]"),
+
     /**
      * Permission for staff to allow executing commands while ingame.
      */

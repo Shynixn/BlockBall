@@ -453,6 +453,9 @@ goalKickPerformMessage:
   fadeInTicks: 0
   stayTicks: 20
   fadeOutTicks: 20
+commandReJoinToolTip:
+  type: "CHAT"
+  text: "Rejoin the last game you played if it is still running."
 shyScoreboardPlayerNotFoundMessage:
   # Available types: "CHAT", "TITLE", "ACTIONBAR", "HIDDEN".
   # Please notice that some messages do only support chat.

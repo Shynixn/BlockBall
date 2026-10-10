@@ -206,30 +206,12 @@ class GameListener(
     @EventHandler
     fun onPlayerRespawnEvent(event: PlayerRespawnEvent) {
         val game = gameService.getByPlayer(event.player) ?: return
-        val team = game.ingamePlayersStorage[event.player]?.goalTeam
+        val team = game.ingamePlayersStorage[event.player]?.team
 
-        val teamMeta = when (team) {
-            Team.RED -> {
-                game.arena.meta.redTeamMeta
-            }
-
-            Team.BLUE -> {
-                game.arena.meta.blueTeamMeta
-            }
-
-            Team.REFEREE -> {
-                game.arena.meta.refereeTeamMeta
-            }
-
-            else -> {
-                return
-            }
-        }
-
-        if (teamMeta.spawnpoint == null) {
+        if (team == null) {
             event.respawnLocation = game.arena.ballSpawnPoint!!.toLocation()
         } else {
-            event.respawnLocation = teamMeta.spawnpoint!!.toLocation()
+            event.respawnLocation = game.getTeamSpawnpoint(team)
         }
     }
 

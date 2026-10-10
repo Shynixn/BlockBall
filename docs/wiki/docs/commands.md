@@ -107,6 +107,29 @@ Join a specific game, optionally choosing a team.
 /blockball join stadium1 blue Steve
 ```
 
+#### `/blockball rejoin`
+Rejoin the last game you played, if it is still running.
+
+```bash
+/blockball rejoin [player]
+```
+
+**Parameters:**
+- `player` - Target player (admin only, requires `blockball.edit`)
+
+**Behavior:**
+- Finds the most recently joined game you were part of
+- Restores you to the same team you played on
+- Does nothing if you are already in a game, or if none of your previous games are still running
+
+**Permission:** `blockball.rejoin.[name]` (or `blockball.rejoin.*` for all arenas)
+
+**Examples:**
+```bash
+/blockball rejoin
+/blockball rejoin Steve
+```
+
 #### `/blockball leave`
 Leave the current game.
 
@@ -309,6 +332,7 @@ Reload arena configurations without restarting.
     - Regular players need `blockball.command` for basic commands
     - Arena editing requires `blockball.edit`
     - Referee commands need `blockball.referee.join`
+    - Rejoining a specific arena needs `blockball.rejoin.[name]`
 
 !!! info "Admin Features"
     Many commands accept a player parameter when you have admin permissions, allowing you to manage other players' arena participation.

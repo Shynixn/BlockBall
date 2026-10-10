@@ -4,13 +4,11 @@ import com.github.shynixn.blockball.enumeration.Team
 import org.bukkit.GameMode
 
 class GameStorage {
-    /** Team of the player. */
-    var team: Team? = null
-
     /**
-     * Team of the goal which may or may not be the same of the team depending on the swapping state.
-     */
-    var goalTeam: Team? = null
+     * Team of the player.
+     * Be careful that the goals can be mirrored for a game.
+     * */
+    var team: Team? = null
 
     /**
      * Exp level of the player.
@@ -65,7 +63,7 @@ class GameStorage {
     /**
      * Has the player already received the death points for this match? This is used to prevent players from receiving multiple death points when they die multiple times in a match.
      */
-    var appliedDeathPoints : Boolean = false
+    var appliedDeathPoints: Boolean = false
 
     /**
      * Inventory cache.

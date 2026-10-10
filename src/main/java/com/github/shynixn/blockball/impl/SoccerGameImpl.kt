@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.github.shynixn.blockball.impl
 
 import com.github.shynixn.blockball.contract.*
@@ -57,6 +59,11 @@ abstract class SoccerGameImpl(
     val forceFieldService: ForceFieldService
 ) : SoccerGame {
     protected var startDateUtc = Instant.now()
+
+    /**
+     * A map of all joined player uuid in this game. A value is not removed when a player leaves, this stays filled until the game is disposed.
+     */
+    override val joinedUniquePlayers: MutableMap<String, Pair<Long, Team>> = HashMap()
 
     /**
      * If set, then the game is already disposed and must not be used.
@@ -230,6 +237,41 @@ abstract class SoccerGameImpl(
         }
 
     /**
+     * Forces a player to join this game regardless of state.
+     */
+    override fun joinForce(player: Player, team: Team): JoinResult {
+        plugin.log.debug("[BlockBall] Player '${player.name}' initiating forceJoin sequence for Arena: '${arena.name}' (Game ID: $id).")
+
+        val joinResult = if (team == Team.RED) {
+            plugin.log.debug("[BlockBall] Allocating player '${player.name}' to Team RED in Arena: '${arena.name}'. Current capacity: ${redTeam.size}/${arena.meta.redTeamMeta.maxAmount}")
+            setPlayerToArena(player, team)
+            storeTemporaryPlayerData(player, team)
+            executeCommandsWithPlaceHolder(setOf(player), arena.meta.redTeamMeta.joinCommands)
+            plugin.log.debug("[BlockBall] Successfully processed registration for player '${player.name}' to Team RED in Arena: '${arena.name}'.")
+            JoinResult.SUCCESS_RED
+        } else if (team == Team.BLUE) {
+            plugin.log.debug("[BlockBall] Allocating player '${player.name}' to Team BLUE in Arena: '${arena.name}'. Current capacity: ${blueTeam.size}/${arena.meta.blueTeamMeta.maxAmount}")
+            setPlayerToArena(player, team)
+            storeTemporaryPlayerData(player, team)
+            executeCommandsWithPlaceHolder(setOf(player), arena.meta.blueTeamMeta.joinCommands)
+            plugin.log.debug("[BlockBall] Successfully processed registration for player '${player.name}' to Team BLUE in Arena: '${arena.name}'.")
+            JoinResult.SUCCESS_BLUE
+        } else if (team == Team.REFEREE) {
+            plugin.log.debug("[BlockBall] Allocating player '${player.name}' as REFEREE in Arena: '${arena.name}'. Current capacity: ${refereeTeam.size}/${arena.meta.refereeTeamMeta.maxAmount}")
+            setPlayerToArena(player, team)
+            storeTemporaryPlayerData(player, team)
+            executeCommandsWithPlaceHolder(setOf(player), arena.meta.refereeTeamMeta.joinCommands)
+            plugin.log.debug("[BlockBall] Successfully processed registration for player '${player.name}' as REFEREE in Arena: '${arena.name}'.")
+            JoinResult.SUCCESS_REFEREE
+        } else {
+            JoinResult.TEAM_FULL
+        }
+
+        plugin.log.debug("[BlockBall] Player '${player.name}' completed forceJoin sequence for Arena: '${arena.name}' (Game ID: $id).")
+        return joinResult
+    }
+
+    /**
      * Lets the given [player] leave join. Optional can the prefered
      * [team] be specified but the team can still change because of soccerArena settings.
      * Does nothing if the player is already in a Game.
@@ -343,12 +385,12 @@ abstract class SoccerGameImpl(
         ingamePlayersStorage.remove(player)
 
         coroutineHandler.execute {
-            val playerData = playerDataRepository.getByPlayer(player)
+            val pData = playerDataRepository.getByPlayer(player)
 
-            if (playerData != null) {
+            if (pData != null) {
                 coroutineHandler.execute(coroutineHandler.fetchEntityDispatcher(player)) {
                     if (player.isOnline) {
-                        playerData.cachedStorage = null
+                        pData.cachedStorage = null
                         plugin.log.debug("[BlockBall] Flushed session cached player storage data for '${player.name}' upon departure from Arena: '${arena.name}'.")
                     }
                 }
@@ -507,7 +549,7 @@ abstract class SoccerGameImpl(
     override fun respawn(player: Player, team: Team?) {
         plugin.log.debug("[BlockBall] Initializing respawn calculations for player '${player.name}' in Arena: '${arena.name}'.")
         val actualTeam = if (ingamePlayersStorage.containsKey(player)) {
-            ingamePlayersStorage[player]!!.goalTeam
+            ingamePlayersStorage[player]!!.team
         } else {
             team
         }
@@ -516,22 +558,7 @@ abstract class SoccerGameImpl(
             return
         }
 
-        val teamMeta = if (actualTeam == Team.RED) {
-            arena.meta.redTeamMeta
-        } else if (actualTeam == Team.BLUE) {
-            arena.meta.blueTeamMeta
-        } else if (actualTeam == Team.REFEREE) {
-            arena.meta.refereeTeamMeta
-        } else {
-            return
-        }
-
-        val spawnPoint = if (teamMeta.spawnpoint == null) {
-            arena.ballSpawnPoint!!.toLocation()
-        } else {
-            teamMeta.spawnpoint!!.toLocation()
-        }
-
+        val spawnPoint = getTeamSpawnpoint(actualTeam)
         plugin.log.debug("[BlockBall] Queuing sync entity dispatcher to teleport player '${player.name}' to respawn point ($spawnPoint) in Arena: '${arena.name}'.")
         coroutineHandler.execute(coroutineHandler.fetchEntityDispatcher(player)) {
             player.teleportCompat(plugin, spawnPoint)
@@ -633,9 +660,7 @@ abstract class SoccerGameImpl(
                     plugin.launch {
                         for (i in delaySeconds downTo 1) {
                             chatMessageService.sendLanguageMessage(
-                                subStatePlayerParam!!,
-                                language.throwInTeleportMessage,
-                                i.toString()
+                                subStatePlayerParam!!, language.throwInTeleportMessage, i.toString()
                             )
                             delay(1000)
                         }
@@ -643,8 +668,10 @@ abstract class SoccerGameImpl(
                     setNextGameSubState(GameSubState.BALL_OUT_THROW_IN_PERFORM, delaySeconds * 1000L)
                 } else {
                     // Goal-line exit: corner kick or goal kick.
-                    val lastTouchedByDefender = (teamSide == Team.RED && redTeam.contains(lastInteractedWithBallPlayer))
-                            || (teamSide == Team.BLUE && blueTeam.contains(lastInteractedWithBallPlayer))
+                    val lastTouchedByDefender =
+                        (teamSide == Team.RED && redTeam.contains(lastInteractedWithBallPlayer)) || (teamSide == Team.BLUE && blueTeam.contains(
+                            lastInteractedWithBallPlayer
+                        ))
 
                     if (lastTouchedByDefender) {
                         // Corner kick: defender last touched → attacking team kicks from the nearest corner.
@@ -657,9 +684,7 @@ abstract class SoccerGameImpl(
                         plugin.launch {
                             for (i in delaySeconds downTo 1) {
                                 chatMessageService.sendLanguageMessage(
-                                    subStatePlayerParam!!,
-                                    language.cornerKickTeleportMessage,
-                                    i.toString()
+                                    subStatePlayerParam!!, language.cornerKickTeleportMessage, i.toString()
                                 )
                                 delay(1000)
                             }
@@ -683,9 +708,7 @@ abstract class SoccerGameImpl(
                         plugin.launch {
                             for (i in delaySeconds downTo 1) {
                                 chatMessageService.sendLanguageMessage(
-                                    subStatePlayerParam!!,
-                                    language.goalKickTeleportMessage,
-                                    i.toString()
+                                    subStatePlayerParam!!, language.goalKickTeleportMessage, i.toString()
                                 )
                                 delay(1000)
                             }
@@ -713,9 +736,7 @@ abstract class SoccerGameImpl(
                     for (i in arena.ballOutOfBounds.timeToStartSec downTo 1) {
                         for (player in getPlayers()) {
                             chatMessageService.sendLanguageMessage(
-                                player,
-                                language.throwInReadyMessage,
-                                i.toString()
+                                player, language.throwInReadyMessage, i.toString()
                             )
                         }
                         delay(1000)
@@ -754,9 +775,7 @@ abstract class SoccerGameImpl(
                     for (i in arena.ballOutOfBounds.timeToStartSec downTo 1) {
                         for (player in getPlayers()) {
                             chatMessageService.sendLanguageMessage(
-                                player,
-                                language.cornerKickReadyMessage,
-                                i.toString()
+                                player, language.cornerKickReadyMessage, i.toString()
                             )
                         }
                         delay(1000)
@@ -792,9 +811,7 @@ abstract class SoccerGameImpl(
                     for (i in arena.ballOutOfBounds.timeToStartSec downTo 1) {
                         for (player in getPlayers()) {
                             chatMessageService.sendLanguageMessage(
-                                player,
-                                language.goalKickReadyMessage,
-                                i.toString()
+                                player, language.goalKickReadyMessage, i.toString()
                             )
                         }
                         delay(1000)
@@ -1017,41 +1034,9 @@ abstract class SoccerGameImpl(
         val tickDelay = 20 * arena.meta.customizingMeta.backTeleportDelay
         coroutineHandler.execute {
             delay(tickDelay.ticks)
-            var redTeamSpawnpoint = arena.meta.redTeamMeta.spawnpoint
 
-            if (redTeamSpawnpoint == null) {
-                redTeamSpawnpoint = arena.ballSpawnPoint!!
-            }
-
-            var blueTeamSpawnpoint = arena.meta.blueTeamMeta.spawnpoint
-
-            if (blueTeamSpawnpoint == null) {
-                blueTeamSpawnpoint = arena.ballSpawnPoint!!
-            }
-
-            var refereeSpawnpoint = arena.meta.refereeTeamMeta.spawnpoint
-
-            if (refereeSpawnpoint == null) {
-                refereeSpawnpoint = arena.ballSpawnPoint!!
-            }
-
-            for (i in ingamePlayersStorage) {
-                val player = i.key
-                val location = if (i.value.goalTeam == Team.RED) {
-                    redTeamSpawnpoint.toLocation()
-                } else if (i.value.goalTeam == Team.BLUE) {
-                    blueTeamSpawnpoint.toLocation()
-                } else if (i.value.team == Team.REFEREE) {
-                    refereeSpawnpoint.toLocation()
-                } else {
-                    null
-                }
-
-                if (location != null) {
-                    coroutineHandler.execute(coroutineHandler.fetchEntityDispatcher(player)) {
-                        player.teleportCompat(plugin, location)
-                    }
-                }
+            for (player in ingamePlayersStorage.keys) {
+                respawn(player)
             }
 
             executeCommandsWithPlaceHolder(redTeam, arena.meta.redTeamMeta.backTeleportCommands)
@@ -1067,10 +1052,10 @@ abstract class SoccerGameImpl(
     private fun storeTemporaryPlayerData(player: Player, team: Team) {
         plugin.log.debug("[BlockBall] Scheduling player profile capture task for '${player.name}' in Arena: '${arena.name}'.")
         // Store
+        joinedUniquePlayers[player.uniqueId.toString()] = Pair(System.currentTimeMillis(), team)
         val stats = GameStorage()
         ingamePlayersStorage[player] = stats
         stats.team = team
-        stats.goalTeam = team
 
         coroutineHandler.execute(coroutineHandler.fetchEntityDispatcher(player)) {
             plugin.log.debug("[BlockBall] Persisting temporary profile states (Inventory, XP, Status) for player '${player.name}' inside Arena: '${arena.name}'.")
@@ -1289,6 +1274,33 @@ abstract class SoccerGameImpl(
     fun destroyBall() {
         ball?.remove()
         ball = null
+    }
+
+    /**
+     * Gets the spawnpoint of a team. This method considers mirrored goals as well.
+     */
+    override fun getTeamSpawnpoint(team: Team): Location {
+        val spawnPoint = if (team == Team.REFEREE) {
+            arena.meta.refereeTeamMeta.spawnpoint
+        } else if (mirroredGoals) {
+            if (team == Team.RED) {
+                arena.meta.blueTeamMeta.spawnpoint
+            } else {
+                arena.meta.redTeamMeta.spawnpoint
+            }
+        } else {
+            if (team == Team.RED) {
+                arena.meta.redTeamMeta.spawnpoint
+            } else {
+                arena.meta.blueTeamMeta.spawnpoint
+            }
+        }
+
+        if (spawnPoint == null) {
+            return arena.ballSpawnPoint!!.toLocation()
+        } else {
+            return spawnPoint.toLocation()
+        }
     }
 
     /**
