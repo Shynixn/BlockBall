@@ -705,6 +705,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#blockball-rejoin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        /blockball rejoin
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#blockball-leave" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1412,6 +1423,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#blockball-rejoin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        /blockball rejoin
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#blockball-leave" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1832,6 +1854,21 @@ arena2 [Practice Field] [disabled]
 /blockball<span class="w"> </span>join<span class="w"> </span>stadium1<span class="w"> </span>red
 /blockball<span class="w"> </span>join<span class="w"> </span>stadium1<span class="w"> </span>blue<span class="w"> </span>Steve
 </code></pre></div></p>
+<h4 id="blockball-rejoin"><code>/blockball rejoin</code></h4>
+<p>Rejoin the last game you played, if it is still running.</p>
+<div class="highlight"><pre><span></span><code>/blockball<span class="w"> </span>rejoin<span class="w"> </span><span class="o">[</span>player<span class="o">]</span>
+</code></pre></div>
+<p><strong>Parameters:</strong>
+- <code>player</code> - Target player (admin only, requires <code>blockball.edit</code>)</p>
+<p><strong>Behavior:</strong>
+- Finds the most recently joined game you were part of
+- Restores you to the same team you played on
+- Does nothing if you are already in a game, or if none of your previous games are still running</p>
+<p><strong>Permission:</strong> <code>blockball.rejoin.[name]</code> (or <code>blockball.rejoin.*</code> for all arenas)</p>
+<p><strong>Examples:</strong>
+<div class="highlight"><pre><span></span><code>/blockball<span class="w"> </span>rejoin
+/blockball<span class="w"> </span>rejoin<span class="w"> </span>Steve
+</code></pre></div></p>
 <h4 id="blockball-leave"><code>/blockball leave</code></h4>
 <p>Leave the current game.</p>
 <div class="highlight"><pre><span></span><code>/blockball<span class="w"> </span>leave<span class="w"> </span><span class="o">[</span>player<span class="o">]</span>
@@ -2027,6 +2064,7 @@ arena2 [Practice Field] [disabled]
 <li>Regular players need <code>blockball.command</code> for basic commands</li>
 <li>Arena editing requires <code>blockball.edit</code></li>
 <li>Referee commands need <code>blockball.referee.join</code></li>
+<li>Rejoining a specific arena needs <code>blockball.rejoin.[name]</code></li>
 </ul>
 </div>
 <div class="admonition info">

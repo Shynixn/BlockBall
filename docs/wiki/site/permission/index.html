@@ -1649,6 +1649,7 @@
 <div class="highlight"><pre><span></span><code><span class="c1"># Basic BlockBall access (required for all players)</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blockball.command</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blockball.join.*</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blockball.rejoin.*</span>
 
 <span class="c1"># Display permissions (recommended for all players)  </span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blockball.shyscoreboard.scoreboard.*</span>
@@ -1725,6 +1726,16 @@
 <td><code>blockball.join.[arena_name]</code></td>
 <td><strong>User</strong></td>
 <td>Join specific arena only</td>
+</tr>
+<tr>
+<td><code>blockball.rejoin.*</code></td>
+<td><strong>User</strong></td>
+<td>Rejoin the last game you played in any arena</td>
+</tr>
+<tr>
+<td><code>blockball.rejoin.[arena_name]</code></td>
+<td><strong>User</strong></td>
+<td>Rejoin only within a specific arena</td>
 </tr>
 </tbody>
 </table>
