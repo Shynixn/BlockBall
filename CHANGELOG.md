@@ -1,5 +1,13 @@
 # Changelog
 
+## Release 7.46.0
+
+### Changes
+
+* #739 Added a new /blockball rejoin command to rejoin the last game you played if it is still running. This command will also restore you to the same team you played on. This is not enabled per default and you need to give players the new permission blockball.rejoin.<arena_name> to allow them to use it. You can also give the permission blockball.rejoin.* to allow players to rejoin any arena they played in.
+
+---
+
 ## Release 7.45.0
 
 ### Changes

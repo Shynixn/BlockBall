@@ -21,6 +21,7 @@ For most servers, these permissions provide the best balance of functionality an
 # Basic BlockBall access (required for all players)
 - blockball.command
 - blockball.join.*
+- blockball.rejoin.*
 
 # Display permissions (recommended for all players)  
 - blockball.shyscoreboard.scoreboard.*
@@ -85,6 +86,8 @@ For most servers, these permissions provide the best balance of functionality an
 | `blockball.command` | **User** | Access to `/blockball` command base |
 | `blockball.join.*` | **User** | Join any arena (requires `blockball.command`) |
 | `blockball.join.[arena_name]` | **User** | Join specific arena only |
+| `blockball.rejoin.*` | **User** | Rejoin the last game you played in any arena |
+| `blockball.rejoin.[arena_name]` | **User** | Rejoin only within a specific arena |
 
 **Example Arena-Specific Permissions:**
 ```yaml

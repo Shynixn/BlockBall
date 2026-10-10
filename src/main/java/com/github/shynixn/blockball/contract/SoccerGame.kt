@@ -122,6 +122,11 @@ interface SoccerGame {
     val ingamePlayersStorage: MutableMap<Player, GameStorage>
 
     /**
+     * A map of all joined player uuid in this game. A value is not removed when a player leaves, this stays filled until the game is disposed.
+     */
+    val joinedUniquePlayers: Map<String, Pair<Long, Team>>
+
+    /**
      * Compatibility reference.
      */
     val language: BlockBallLanguage
@@ -147,6 +152,11 @@ interface SoccerGame {
      * Does nothing if the player is already in a Game.
      */
     fun join(player: Player, team: Team? = null): JoinResult
+
+    /**
+     * Forces a player to join this game regardless of state.
+     */
+    fun joinForce(player: Player, team: Team): JoinResult
 
     /**
      * Leaves the given player.
@@ -179,6 +189,11 @@ interface SoccerGame {
      * Cancels the game.
      */
     fun close()
+
+    /**
+     * Gets the spawnpoint of a team. This method considers mirrored goals as well.
+     */
+    fun getTeamSpawnpoint(team: Team) : Location
 
     /**
      * Gets all players.

@@ -28,7 +28,7 @@ import java.time.Instant
 open class SoccerMiniGameImpl(
     arena: SoccerArena,
     playerDataRepository: PlayerDataRepository<PlayerInformation>,
-   plugin: Plugin,
+    plugin: Plugin,
     placeHolderService: PlaceHolderService,
     chatMessageService: ChatMessageService,
     private val soundService: SoundService,
@@ -140,9 +140,7 @@ open class SoccerMiniGameImpl(
                     if (gameCountdown % 10 == 0 || gameCountdown <= 5) {
                         for (player in ingamePlayersStorage.keys) {
                             chatMessageService.sendLanguageMessage(
-                                player,
-                                language.gameStartingMessage,
-                                gameCountdown.toString()
+                                player, language.gameStartingMessage, gameCountdown.toString()
                             )
                         }
                     }
@@ -198,8 +196,7 @@ open class SoccerMiniGameImpl(
 
             if (ball == null && ballEnabled && ingamePlayersStorage.isNotEmpty() && subStateNext != GameSubState.BALL_RESPAWNED) {
                 setNextGameSubState(
-                    GameSubState.BALL_RESPAWNED,
-                    arena.meta.customizingMeta.gameStartBallSpawnDelayTicks * 50L
+                    GameSubState.BALL_RESPAWNED, arena.meta.customizingMeta.gameStartBallSpawnDelayTicks * 50L
                 )
             }
 
@@ -260,18 +257,6 @@ open class SoccerMiniGameImpl(
 
         if (matchTime.switchGoals) {
             mirroredGoals = !mirroredGoals
-
-            ingamePlayersStorage.values.forEach { e ->
-                if (e.goalTeam != null) {
-                    if (e.goalTeam == Team.RED) {
-                        e.goalTeam = Team.BLUE
-                    } else if (e.goalTeam == Team.BLUE) {
-                        e.goalTeam = Team.RED
-                    } else {
-                        e.goalTeam = Team.REFEREE
-                    }
-                }
-            }
         }
 
         ballEnabled = matchTime.playAbleBall
@@ -302,11 +287,15 @@ open class SoccerMiniGameImpl(
     }
 
     override fun setPlayerToArena(player: Player, team: Team) {
-        val teamMeta = getTeamMetaFromTeam(team)
-        val location = teamMeta.lobbySpawnpoint!!.toLocation()
+        if (playing) {
+            respawn(player, team)
+        } else {
+            val teamMeta = getTeamMetaFromTeam(team)
+            val location = teamMeta.lobbySpawnpoint!!.toLocation()
 
-        coroutineHandler.execute(coroutineHandler.fetchEntityDispatcher(player)) {
-            player.teleportCompat(plugin, location)
+            coroutineHandler.execute(coroutineHandler.fetchEntityDispatcher(player)) {
+                player.teleportCompat(plugin, location)
+            }
         }
     }
 

@@ -4,6 +4,7 @@ import com.github.shynixn.blockball.BlockBallDependencyInjectionModule
 import com.github.shynixn.blockball.contract.BlockBallLanguage
 import com.github.shynixn.blockball.contract.CloudService
 import com.github.shynixn.blockball.contract.GameService
+import com.github.shynixn.blockball.contract.SoccerGame
 import com.github.shynixn.blockball.contract.SoccerRefereeGame
 import com.github.shynixn.blockball.entity.SoccerArena
 import com.github.shynixn.blockball.entity.SoccerBallMeta
@@ -24,7 +25,6 @@ import com.github.shynixn.mcutils.common.repository.CacheRepository
 import com.github.shynixn.mcutils.common.selection.AreaHighlight
 import com.github.shynixn.mcutils.common.selection.AreaSelectionService
 import com.github.shynixn.shyguild.contract.GuildService
-import com.github.shynixn.shyguild.entity.Guild
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
@@ -325,6 +325,21 @@ class BlockBallCommandExecutor(
                 builder().argument("name").validator(gameMustExistValidator).tabs(arenaTabs)
                     .execute { sender, arena -> toggleGame(sender, arena) }
             }
+            subCommand("rejoin") {
+                noPermission()
+                toolTip { language.commandReJoinToolTip.text }
+                builder().executePlayer({ language.commandSenderHasToBePlayer.text }) { player ->
+                    rejoinGame(
+                        player, player
+                    )
+                }.argument("player").validator(playerMustExist).tabs(onlinePlayerTabs)
+                    .permission { Permission.EDIT_GAME.permission }
+                    .permissionMessage { language.noPermissionMessage.text }.execute { sender, player ->
+                        rejoinGame(
+                            sender, player
+                        )
+                    }
+            }
             subCommand("join") {
                 noPermission()
                 toolTip { language.commandJoinToolTip.text }
@@ -618,6 +633,52 @@ class BlockBallCommandExecutor(
             }
         }
         commandService.registerCommand(builder)
+    }
+
+    private fun rejoinGame(sender: CommandSender, player: Player) {
+        // Ignore if still playing in a game.
+        var previousGame: SoccerGame? = null
+        var previousTimeStamp = 0L
+        var previousTeam = Team.BLUE
+        val playerUUID = player.uniqueId.toString()
+        for (game in gameService.getAll()) {
+            if (game.getPlayers().contains(player)) {
+                return
+            }
+
+            val playerGameJoinSet = game.joinedUniquePlayers[playerUUID]
+            if (playerGameJoinSet != null) {
+                val playerGameJoinTimeStamp = playerGameJoinSet.first
+                if (previousGame == null || playerGameJoinTimeStamp > previousTimeStamp) {
+                    previousGame = game
+                    previousTimeStamp = playerGameJoinTimeStamp
+                    previousTeam = playerGameJoinSet.second
+                }
+            }
+        }
+
+        if (previousGame == null) {
+            return
+        }
+
+        if (!sender.hasPermission(
+                Permission.REJOIN.permission.replace(
+                    "[name]", previousGame.arena.name
+                )
+            ) && !sender.hasPermission(Permission.REJOIN.permission.replace("[name]", "*"))
+        ) {
+            sender.sendLanguageMessage(language.noPermissionForGameMessage, previousGame.arena.name)
+            return
+        }
+        val joinResult = previousGame.joinForce(player, previousTeam)
+
+        if (joinResult == JoinResult.SUCCESS_BLUE) {
+            player.sendLanguageMessage(language.joinTeamBlueMessage)
+        } else if (joinResult == JoinResult.SUCCESS_RED) {
+            player.sendLanguageMessage(language.joinTeamRedMessage)
+        } else if (joinResult == JoinResult.SUCCESS_REFEREE) {
+            player.sendLanguageMessage(language.joinTeamRefereeMessage)
+        }
     }
 
     private fun setYellowCardToPlayer(referee: Player, playerToAssign: Player) {
@@ -1216,9 +1277,7 @@ class BlockBallCommandExecutor(
         val selectionLeft = selectionService.getLeftClickLocation(player)
         val selectionRight = selectionService.getRightClickLocation(player)
 
-        if (selectionType == SelectionType.FIELD || selectionType == SelectionType.RED_GOAL || selectionType == SelectionType.BLUE_GOAL || selectionType == SelectionType.OUTER_FIELD
-            || selectionType == SelectionType.RED_OUT || selectionType == SelectionType.BLUE_OUT
-        ) {
+        if (selectionType == SelectionType.FIELD || selectionType == SelectionType.RED_GOAL || selectionType == SelectionType.BLUE_GOAL || selectionType == SelectionType.OUTER_FIELD || selectionType == SelectionType.RED_OUT || selectionType == SelectionType.BLUE_OUT) {
             if (selectionLeft == null) {
                 player.sendLanguageMessage(language.noLeftClickSelectionMessage)
                 return

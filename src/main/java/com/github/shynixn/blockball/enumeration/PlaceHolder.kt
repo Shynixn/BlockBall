@@ -271,9 +271,9 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
             val gameStorage = game.ingamePlayersStorage[player]
 
             if (gameStorage != null) {
-                if (gameStorage.goalTeam == Team.RED) {
+                if ((game.mirroredGoals && gameStorage.team == Team.BLUE) || (!game.mirroredGoals && gameStorage.team == Team.RED)) {
                     game.arena.meta.redTeamMeta.goal.center.distance(player.location.toVector3d()).toInt().toString()
-                } else if (gameStorage.goalTeam == Team.BLUE) {
+                } else if ((game.mirroredGoals && gameStorage.team == Team.RED) || (!game.mirroredGoals && gameStorage.team == Team.BLUE)) {
                     game.arena.meta.blueTeamMeta.goal.center.distance(player.location.toVector3d()).toInt().toString()
                 } else {
                     "∞"
@@ -291,9 +291,9 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
             val gameStorage = game.ingamePlayersStorage[player]
 
             if (gameStorage != null) {
-                if (gameStorage.goalTeam == Team.RED) {
+                if ((game.mirroredGoals && gameStorage.team == Team.BLUE) || (!game.mirroredGoals && gameStorage.team == Team.RED)) {
                     game.arena.meta.blueTeamMeta.goal.center.distance(player.location.toVector3d()).toInt().toString()
-                } else if (gameStorage.goalTeam == Team.BLUE) {
+                } else if ((game.mirroredGoals && gameStorage.team == Team.RED) || (!game.mirroredGoals && gameStorage.team == Team.BLUE)) {
                     game.arena.meta.redTeamMeta.goal.center.distance(player.location.toVector3d()).toInt().toString()
                 } else {
                     "∞"

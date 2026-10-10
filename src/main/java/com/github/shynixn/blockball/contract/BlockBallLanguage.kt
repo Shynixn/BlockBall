@@ -262,4 +262,6 @@ interface BlockBallLanguage : LanguageProvider, ShyScoreboardLanguage, ShyBossBa
   var goalKickReadyMessage: LanguageItem
 
   var goalKickPerformMessage: LanguageItem
+
+  var commandReJoinToolTip: LanguageItem
 }
