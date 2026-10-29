@@ -1,0 +1,25 @@
+# ###############
+#
+# Configuration for a ball spawning outside a BlockBall game.
+# You can duplicate this file and create as many spawns as you want.
+# The plugin will automatically load all spawns from the "spawns" folder.
+#
+# ###############
+# Unique identifier for this spawn.
+name: hub_soccer_ball
+# Ball id to spawn
+ballName: "soccer_ball"
+# Set this to true to enable this spawn. If set to false, the spawn will be ignored.
+enabled: false
+# If the ball is not touched after 30 seconds, it will despawn automatically.
+removeAfterSeconds: 30
+# If a player is in the radius of the spawn, the ball will spawn.
+spawnRadius: 50
+# Spawn point of the ball. The ball will spawn at this location.
+spawnpoint:
+  world: "world"
+  x: 0.0
+  y: 0.0
+  z: 0.0
+  yaw: 0.0
+  pitch: 0.0

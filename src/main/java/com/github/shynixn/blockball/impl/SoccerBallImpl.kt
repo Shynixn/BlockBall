@@ -21,6 +21,7 @@ import com.github.shynixn.mcutils.packet.api.meta.enumeration.EntityType
 import com.github.shynixn.mcutils.packet.api.packet.*
 import com.github.shynixn.shyparticles.contract.ParticleEffectService
 import org.bukkit.Bukkit
+import org.bukkit.GameMode
 import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
@@ -169,6 +170,11 @@ class SoccerBallImpl(
      * A specific player that has exclusive locking rights to interact with this ball.
      */
     override var lockedPlayer: Player? = null
+
+    /**
+     * Timestamp in milliseconds when this ball was last interacted with.
+     */
+    override var lastTouchTimeStamp: Long = 0L
 
     private var grabTotalGrabbedTimeMs: Long = 0L
     private var grabPositionCache = Vector(0.0, 0.0, 0.0)
@@ -371,6 +377,10 @@ class SoccerBallImpl(
      * distributions modified by ball mass constraints, and commits the resulting physics shifts.
      */
     private fun applyInteractionToBall(player: Player, ballInputActionType: BallInputActionType) {
+        if (player.gameMode == GameMode.SPECTATOR) {
+            return
+        }
+
         val interactionMeta = findPlayerAction(player, ballInputActionType)
         if (interactionMeta == null) {
             return
@@ -390,6 +400,8 @@ class SoccerBallImpl(
             globalCooldown.reset()
             return
         }
+
+        lastTouchTimeStamp = System.currentTimeMillis()
 
         if (interactionMeta.executionType == BallExecuteActionType.SHOOT) {
             // Reset grabbing state.

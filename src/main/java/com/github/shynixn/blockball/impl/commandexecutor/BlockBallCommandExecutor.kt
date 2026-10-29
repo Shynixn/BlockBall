@@ -8,6 +8,7 @@ import com.github.shynixn.blockball.contract.SoccerGame
 import com.github.shynixn.blockball.contract.SoccerRefereeGame
 import com.github.shynixn.blockball.entity.SoccerArena
 import com.github.shynixn.blockball.entity.SoccerBallMeta
+import com.github.shynixn.blockball.entity.SpawnBallMeta
 import com.github.shynixn.blockball.entity.TeamMeta
 import com.github.shynixn.blockball.enumeration.*
 import com.github.shynixn.blockball.impl.exception.SoccerGameException
@@ -54,7 +55,8 @@ class BlockBallCommandExecutor(
     private val cloudService: CloudService,
     private val coroutineHandler: CoroutineHandler,
     private val server: Server,
-    private val guildService: GuildService
+    private val guildService: GuildService,
+    private val globalSoccerBallRepository: CacheRepository<SpawnBallMeta>
 ) {
     private val arenaTabs: (s: CommandSender) -> List<String> = {
         var cache = arenaRepository.getCache()
@@ -626,6 +628,8 @@ class BlockBallCommandExecutor(
                 builder().execute { sender ->
                     ballRepository.clearCache()
                     ballRepository.getAll()
+                    globalSoccerBallRepository.clearCache()
+                    globalSoccerBallRepository.getAll()
                     reloadArena(sender, null)
                 }.argument("name").validator(gameMustExistValidator).tabs(arenaTabs).execute { sender, arena ->
                     reloadArena(sender, arena)

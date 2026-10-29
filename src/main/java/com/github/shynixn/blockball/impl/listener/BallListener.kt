@@ -7,6 +7,7 @@ import com.github.shynixn.mccoroutine.folia.regionDispatcher
 import com.github.shynixn.mcutils.packet.api.event.PacketAsyncEvent
 import com.github.shynixn.mcutils.packet.api.meta.enumeration.InteractionType
 import com.github.shynixn.mcutils.packet.api.packet.PacketInInteractEntity
+import org.bukkit.GameMode
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
@@ -27,6 +28,10 @@ class BallListener(private val plugin: Plugin, private val soccerBallService: So
 
         val ball = soccerBallService.getByEntityId(packet.entityId) ?: return
         plugin.launch(plugin.regionDispatcher(ball.getLocation())) {
+            if (event.player.gameMode == GameMode.SPECTATOR) {
+                return@launch
+            }
+
             if (packet.actionType == InteractionType.ATTACK) {
                 ball.applyInteraction(event.player, BallInputActionType.LEFT_CLICK)
             } else {

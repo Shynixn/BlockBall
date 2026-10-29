@@ -1,5 +1,17 @@
 # Changelog
 
+## Release 7.47.0
+
+### Changes
+
+* #742 Added a way to spawn balls outside of games. Check out the [new wiki page](https://shynixn.github.io/BlockBall/wiki/site/spawns/) to find out how the spawns feature works.
+
+### Bugs/Issues
+
+* #773 Fixed gamemode spectator players could interact with the ball.
+
+---
+
 ## Release 7.46.0
 
 ### Changes
