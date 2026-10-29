@@ -171,6 +171,11 @@ class SoccerBallImpl(
      */
     override var lockedPlayer: Player? = null
 
+    /**
+     * Timestamp in milliseconds when this ball was last interacted with.
+     */
+    override var lastTouchTimeStamp: Long = 0L
+
     private var grabTotalGrabbedTimeMs: Long = 0L
     private var grabPositionCache = Vector(0.0, 0.0, 0.0)
     private var grabPositionRefresh = GameObjectIntervalTimer(500)
@@ -395,6 +400,8 @@ class SoccerBallImpl(
             globalCooldown.reset()
             return
         }
+
+        lastTouchTimeStamp = System.currentTimeMillis()
 
         if (interactionMeta.executionType == BallExecuteActionType.SHOOT) {
             // Reset grabbing state.

@@ -8,6 +8,7 @@ nav:
       - Creating the game: game.md
       - Customizing the game: customization.md
       - Customizing the ball: ball.md
+      - Spawning balls in the world: spawns.md
       - Interactions: interaction.md
       - Scoreboards, Signs: sign.md
       - Commands: commands.md

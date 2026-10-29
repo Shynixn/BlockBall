@@ -5,6 +5,7 @@ import com.github.shynixn.blockball.contract.SoccerBallService
 import com.github.shynixn.blockball.contract.StatsService
 import com.github.shynixn.blockball.entity.PlayerInformation
 import com.github.shynixn.blockball.entity.SoccerBallMeta
+import com.github.shynixn.blockball.entity.SpawnBallMeta
 import com.github.shynixn.blockball.enumeration.PlaceHolder
 import com.github.shynixn.blockball.impl.commandexecutor.BlockBallCommandExecutor
 import com.github.shynixn.blockball.impl.exception.SoccerGameException
@@ -223,6 +224,7 @@ class BlockBallPlugin : JavaPlugin(), CoroutineHandler {
         plugin.launch {
             // Load Balls
             soccerBallRepository.getAll()
+            module!!.getService<CacheRepository<SpawnBallMeta>>().getAll()
 
             // Load Games
             val gameService = module!!.getService<GameService>()

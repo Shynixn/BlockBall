@@ -6,6 +6,7 @@ import com.github.shynixn.blockball.contract.ForceFieldService
 import com.github.shynixn.blockball.contract.GameService
 import com.github.shynixn.blockball.contract.SoccerBallService
 import com.github.shynixn.blockball.contract.StatsService
+import com.github.shynixn.blockball.entity.SpawnBallMeta
 import com.github.shynixn.blockball.entity.PlayerInformation
 import com.github.shynixn.blockball.entity.SoccerArena
 import com.github.shynixn.blockball.entity.SoccerBallMeta
@@ -21,7 +22,6 @@ import com.github.shynixn.fasterxml.jackson.core.type.TypeReference
 import com.github.shynixn.mcutils.common.ConfigurationService
 import com.github.shynixn.mcutils.common.ConfigurationServiceImpl
 import com.github.shynixn.mcutils.common.CoroutineHandler
-import com.github.shynixn.mcutils.common.Version
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.github.shynixn.mcutils.common.command.CommandService
 import com.github.shynixn.mcutils.common.command.CommandServiceImpl
@@ -82,6 +82,22 @@ class BlockBallDependencyInjectionModule(
         module.addService<PlaceHolderService>(placeHolderService)
 
         // Repositories
+        module.addService<Repository<SpawnBallMeta>> {
+            module.getService<CacheRepository<SpawnBallMeta>>()
+        }
+        module.addService<CacheRepository<SpawnBallMeta>> {
+            CachedRepositoryImpl(
+                YamlFileRepositoryImpl<SpawnBallMeta>(
+                    plugin,
+                    "spawns",
+                    plugin.dataFolder.toPath().resolve("spawns"),
+                    listOf(
+                        "spawns/hub_soccer_ball.yml" to "hub_soccer_ball.yml",
+                    ),
+                    listOf(),
+                    object : TypeReference<SpawnBallMeta>() {}
+                ))
+        }
         module.addService<Repository<SoccerBallMeta>> {
             module.getService<CacheRepository<SoccerBallMeta>>()
         }
@@ -208,6 +224,7 @@ class BlockBallDependencyInjectionModule(
                 module.getService(),
                 module.getService(),
                 module.getService(),
+                module.getService(),
                 module.getService()
             )
         }
@@ -245,7 +262,8 @@ class BlockBallDependencyInjectionModule(
                 module.getService(),
                 module.getService(),
                 module.getService(),
-                shyGuildModule.getService()
+                shyGuildModule.getService(),
+                module.getService()
             )
         }
         return module

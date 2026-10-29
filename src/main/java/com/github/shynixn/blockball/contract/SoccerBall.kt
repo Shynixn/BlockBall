@@ -51,6 +51,11 @@ interface SoccerBall {
     var lockedPlayer: Player?
 
     /**
+     * Timestamp in milliseconds when this ball was last interacted with.
+     */
+    val lastTouchTimeStamp: Long
+
+    /**
      * Lets the given player grab the ball.
      */
     fun grab(player: Player)
