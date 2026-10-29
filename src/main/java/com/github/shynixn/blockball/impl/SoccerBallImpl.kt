@@ -21,6 +21,7 @@ import com.github.shynixn.mcutils.packet.api.meta.enumeration.EntityType
 import com.github.shynixn.mcutils.packet.api.packet.*
 import com.github.shynixn.shyparticles.contract.ParticleEffectService
 import org.bukkit.Bukkit
+import org.bukkit.GameMode
 import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
@@ -371,6 +372,10 @@ class SoccerBallImpl(
      * distributions modified by ball mass constraints, and commits the resulting physics shifts.
      */
     private fun applyInteractionToBall(player: Player, ballInputActionType: BallInputActionType) {
+        if (player.gameMode == GameMode.SPECTATOR) {
+            return
+        }
+
         val interactionMeta = findPlayerAction(player, ballInputActionType)
         if (interactionMeta == null) {
             return
