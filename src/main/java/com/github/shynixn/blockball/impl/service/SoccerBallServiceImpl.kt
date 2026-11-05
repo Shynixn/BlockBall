@@ -1,5 +1,6 @@
 package com.github.shynixn.blockball.impl.service
 
+import com.github.shynixn.blockball.BlockBallDependencyInjectionModule
 import com.github.shynixn.blockball.contract.SoccerBall
 import com.github.shynixn.blockball.contract.SoccerBallService
 import com.github.shynixn.blockball.entity.SpawnBallMeta
@@ -109,6 +110,9 @@ class SoccerBallServiceImpl(
     }
 
     private fun spawnSoccerBallsOutSideOfGames() {
+        if (!BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
+            return
+        }
         plugin.launch {
             while (!isDisposed) {
                 val soccerBallMetaList = globalSoccerBallRepository.getCache()
