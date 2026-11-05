@@ -8,12 +8,12 @@ nav:
       - Creating the game: game.md
       - Customizing the game: customization.md
       - Customizing the ball: ball.md
-      - Spawning balls in the world: spawns.md
       - Interactions: interaction.md
       - Scoreboards, Signs: sign.md
       - Commands: commands.md
       - PlaceHolders: placeholders.md
       - Developer Api: api.md
+      - Spawning free balls (Patreon): spawns.md
       - Bedrock (Patreon): bedrock.md
       - Referee (Patreon): referee.md
       - Managing Clubs (Patreon): club.md
